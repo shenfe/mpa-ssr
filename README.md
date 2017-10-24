@@ -1,6 +1,6 @@
-# multi-page-ssr
+# mpa-ssr
 
-多页面后端渲染。
+Multi-page Application Server-side Rendering，多页面后端渲染。
 
 ## 项目结构
 
