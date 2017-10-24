@@ -1,0 +1,18 @@
+{
+    "presets": [
+        [
+            "env",
+            {
+                "targets": {
+                    "browsers": [
+                        "Android >= 4.4",
+                        "iOS >= 8"
+                    ]
+                },
+                "modules": false
+            }
+        ]
+    ],
+    "ignore": [
+    ]
+}

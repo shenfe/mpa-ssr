@@ -1,0 +1,17 @@
+#set($title = "${seo.title}")
+#set($keywords = "${seo.keywords}")
+#set($description = "${seo.description}")
+#set($metaImageUrl = "${publicPath}static/logo.png")
+
+<!doctype html>
+<html>
+    <head>
+        #parseTmpl("/snippet/head.html")
+    </head>
+    <body>
+        <div module="list">
+            #parseModule("list")
+        </div>
+        #parseTmpl("/snippet/js.ejs")
+    </body>
+</html>
