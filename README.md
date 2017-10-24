@@ -7,10 +7,10 @@ Multi-page Application Server-side Rendering，多页面后端渲染。
 路径 | 内容
 :--- | :---
 src | 项目源码
-src/module | 模块
+src/module | 模块（组件）
 src/page | 页面
 src/script | 公用逻辑
-src/snippet | 碎片模板
+src/snippet | 碎片文件
 src/static | 公用静态文件
 dist | 发布文件
 mock | 开发测试数据
