@@ -9,7 +9,7 @@
 src | 项目源码
 src/module | 模块
 src/page | 页面
-src/script | 公用逻辑和组件
+src/script | 公用逻辑
 src/snippet | 碎片模板
 src/static | 公用静态文件
 dist | 发布文件
