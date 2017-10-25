@@ -8,13 +8,13 @@ const path = require('path');
 
 const ejs = require('ejs');
 
+const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
+
 const { cwd, isProduction, getPagesEntry, templateExtract, readData } = require('./helper');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-
-const WebpackMd5Hash = require('webpack-md5-hash');
 
 const autoprefixer = require('autoprefixer');
 
@@ -188,7 +188,6 @@ module.exports = (specifiedEntries, options = {}) => {
             extractCommonCss,
             extractPageCss,
             ...(isPro ? [new OptimizeCssAssetsPlugin()] : []),
-            new WebpackMd5Hash(),
             ...htmlWebpackPluginCreator(entries, options, publicPath),
             ...(isPro ? [new UglifyJSPlugin()] : []),
             ...(options.local ? [new Webpack.HotModuleReplacementPlugin()] : []),
