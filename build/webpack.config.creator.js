@@ -32,9 +32,11 @@ const htmlWebpackPluginCreator = (entries, { local }, publicPath) =>
             templateContent: templateParams => {
                 let tmpl = templateExtract(
                     path.resolve(cwd, `src/page/${p}/index.html`),
-                    local && Object.assign({
+                    local ? Object.assign({
                         resourceURL: publicPath
-                    }, readData(path.resolve(cwd, `mock/page-${p}.json`)))
+                    }, readData(path.resolve(cwd, `mock/page-${p}.json`))) : {
+                        resourceURL: publicPath
+                    }
                 );
                 return ejs.compile(tmpl)(templateParams);
             }
@@ -90,7 +92,7 @@ module.exports = (specifiedEntries, options = {}) => {
         },
         watch: false, // options.local,
         performance: {
-            hints: 'warning', // 当资源不符合性能规则时，以什么方式进行提示
+            hints: options.local ? false : 'warning', // 当资源不符合性能规则时，以什么方式进行提示
             maxAssetSize: 400000, // 单个资源允许的最大文件容量，单位：字节，默认250kb
             maxEntrypointSize: 800000, // 单个入口模块引用的所有资源的最大文件容量，单位：字节，默认250kb
             assetFilter: function (assetFilename) { // 控制哪些文件需要进行性能检测
@@ -191,6 +193,16 @@ module.exports = (specifiedEntries, options = {}) => {
             ...htmlWebpackPluginCreator(entries, options, publicPath),
             ...(isPro ? [new UglifyJSPlugin()] : []),
             ...(options.local ? [new Webpack.HotModuleReplacementPlugin()] : []),
+            new SWPrecacheWebpackPlugin(
+                {
+                    cacheId: 'project-name',
+                    // dontCacheBustUrlsMatching: /\.\w{8}\./,
+                    filename: 'service-worker.js',
+                    minify: isPro,
+                    navigateFallback: publicPath,
+                    staticFileGlobsIgnorePatterns: [/\.html$/, /\.map$/, /asset-manifest\.json$/]
+                }
+            ),
             function (compiler) {
                 this.plugin('done', function () {
                     options.done && options.done();

@@ -41,3 +41,13 @@ npm run build:devel
 ```bash
 npm run build:local -- page_name
 ```
+
+## 测试
+
+### Service Worker
+
+1. 在dist/page目录下，执行`python -m SimpleHTTPServer 3001`；
+1. 在test目录下，执行`sh ./sslcert.sh`；
+1. 在根目录下，执行`npm run test:server`；
+1. 参考[博客](http://deanhume.com/home/blogpost/testing-service-workers-locally-with-self-signed-certificates/10155)打开Chrome；
+1. 在Chrome中打开`http://127.0.0.1:3001/detail.html`，查看ServiceWorker缓存情况。

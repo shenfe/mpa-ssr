@@ -30,7 +30,8 @@ module.exports = {
             changeOrigin: true
         }
     },
-    publicPath: `/resource/`,
+    // publicPath: `/resource/`,
+    publicPath: `https://localhost:3000/resource/`,
     contentBase: [
         path.resolve(__dirname, '../dist')
     ]

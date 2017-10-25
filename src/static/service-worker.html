@@ -3,7 +3,7 @@
 <head>
     <script>
         if ('serviceWorker' in window.navigator) {
-            window.navigator.serviceWorker.register('__resourcePath__/service-worker.js')
+            window.navigator.serviceWorker.register('../service-worker.js')
                 .then(function (r) {
                     console.log('ServiceWorker registration successful with scope: ', r.scope)
                 }).catch(function (e) {

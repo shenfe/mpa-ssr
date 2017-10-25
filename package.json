@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "test:server": "node ./test/server.js",
     "clean": "rm -rf ./dist/*",
     "copy": "./node_modules/.bin/shx mkdir -p dist && cd dist && mkdir resource && cp -rf ../src/* ./resource",
     "build": "npm run clean && npm run copy && cross-env NODE_ENV=production node ./build/build.js",
@@ -24,6 +25,7 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
     "expose-loader": "^0.7.3",
+    "express": "^4.16.2",
     "extract-text-webpack-plugin": "^3.0.1",
     "file-loader": "^0.11.2",
     "html-webpack-plugin": "^2.30.1",
