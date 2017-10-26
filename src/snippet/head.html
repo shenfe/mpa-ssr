@@ -1,6 +1,5 @@
 #parseTmpl("/snippet/meta.html")
 <title>${title}</title>
-#parseTmpl("/snippet/css.ejs")
 <script>
     if ('serviceWorker' in window.navigator) {
         window.navigator.serviceWorker.register('$!{appResourcePath}/service-worker.js')
@@ -11,3 +10,4 @@
             });
     }
 </script>
+#parseTmpl("/snippet/css.ejs")
