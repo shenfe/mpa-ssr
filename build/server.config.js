@@ -4,6 +4,10 @@ const ip = require('ip');
 const ipAddr = ip.address();
 const port = 3000;
 
+const appDomain = '';
+const cdnDomain = '';
+const appResourcePath = '/resource/';
+
 module.exports = {
     port: port,
     host: '0.0.0.0',
@@ -30,8 +34,8 @@ module.exports = {
             changeOrigin: true
         }
     },
-    // publicPath: `/resource/`,
-    publicPath: `https://localhost:3000/resource/`,
+    publicPath: `${appResourcePath}`,
+    // publicPath: `http://localhost:3000/resource/`,
     contentBase: [
         path.resolve(__dirname, '../dist')
     ]

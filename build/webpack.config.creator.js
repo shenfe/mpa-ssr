@@ -196,7 +196,6 @@ module.exports = (specifiedEntries, options = {}) => {
             new SWPrecacheWebpackPlugin(
                 {
                     cacheId: 'project-name',
-                    // dontCacheBustUrlsMatching: /\.\w{8}\./,
                     filename: 'service-worker.js',
                     minify: isPro,
                     navigateFallback: publicPath,
