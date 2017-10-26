@@ -2,7 +2,7 @@
 <title>${title}</title>
 <script>
     if ('serviceWorker' in window.navigator) {
-        window.navigator.serviceWorker.register('$!{appResourcePath}/service-worker.js')
+        window.navigator.serviceWorker.register('<%= resourceURL %>service-worker.js')
             .then(function (r) {
                 console.log('ServiceWorker registration successful with scope: ', r.scope)
             }).catch(function (e) {

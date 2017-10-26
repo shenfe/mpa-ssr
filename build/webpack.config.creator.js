@@ -32,13 +32,13 @@ const htmlWebpackPluginCreator = (entries, { local }, publicPath) =>
             templateContent: templateParams => {
                 let tmpl = templateExtract(
                     path.resolve(cwd, `src/page/${p}/index.html`),
-                    local ? Object.assign({
+                    local && Object.assign({
                         resourceURL: publicPath
-                    }, readData(path.resolve(cwd, `mock/page-${p}.json`))) : {
-                        resourceURL: publicPath
-                    }
+                    }, readData(path.resolve(cwd, `mock/page-${p}.json`)))
                 );
-                return ejs.compile(tmpl)(templateParams);
+                return ejs.compile(tmpl)(Object.assign({
+                    resourceURL: publicPath
+                }, templateParams));
             }
         })
     );
