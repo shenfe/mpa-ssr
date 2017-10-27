@@ -2,6 +2,13 @@
 
 Multi-page Application Server-side Rendering，多页面后端渲染。
 
+## 架构特性
+
+1. 多页面，后端控制路由，模板同构、数据直出，SEO友好
+1. 面向页面和组件开发，组件可自由构造、组合
+1. 支持模板碎片，更高的自由度和可复用性
+1. 支持PWA的Service Worker缓存
+
 ## 项目结构
 
 路径 | 内容
