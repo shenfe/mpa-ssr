@@ -7,6 +7,9 @@ const options = {
     buildTogether: true // 是所有页面作为multi-entry一次性用webpack构建，还是每个页面分开、多次构建
 };
 
+const path = require('path');
+require('shelljs/global');
+
 args.forEach(function (val, index, array) {
     console.log(`${index}: ${val}`);
     switch (val) {
@@ -31,7 +34,10 @@ const pages = inputPages.length ? inputPages : Object.keys(require('./helper.js'
 console.log(pages);
 
 if (options.buildTogether) {
-    webpackConfigBuilder(pages, options);
+    webpackConfigBuilder(pages, options, () => {
+        let cwd = process.cwd();
+        cp(path.resolve(cwd, 'dist/resource/service-worker.js'), path.resolve(cwd, 'dist/service-worker.js'));
+    });
 } else {
     const build = i =>
         webpackConfigBuilder([pages[i]], options, () => {

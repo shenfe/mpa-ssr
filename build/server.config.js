@@ -35,7 +35,6 @@ module.exports = {
         }
     },
     publicPath: `${appResourcePath}`,
-    // publicPath: `http://localhost:3000/resource/`,
     contentBase: [
         path.resolve(__dirname, '../dist')
     ]

@@ -44,8 +44,16 @@ npm run build:local -- page_name
 
 ## Service Worker
 
+需要在项目域根路经下代理`service-worker.js`文件。
+
 如需测试，参考[博客](http://deanhume.com/home/blogpost/testing-service-workers-locally-with-self-signed-certificates/10155)打开Chrome：
 
 ```
 "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --unsafely-treat-insecure-origin-as-secure=https://app-domain.com,https://cdn-domain.com --user-data-dir="D:\foo" https://app-domain.com
+```
+
+或者在`dist`目录下执行：
+
+```
+python -m SimpleHTTPServer 3000
 ```
