@@ -44,9 +44,22 @@ npm run build:local -- page_name
 
 ## Service Worker
 
-正式环境下，需要在项目域根路经下代理`service-worker.js`文件。
+正式环境和测试环境下，需要在项目域根路经下代理`service-worker.js`文件。
 
-测试环境如需测试，打开Chrome：
+```
+location /service-worker.js {
+    proxy_pass http://cdn-domain.com/resource-dir/service-worker.js;
+    break;
+}
+location /resource-dir/ {
+    proxy_pass http://cdn-domain.com/resource-dir/;
+    break;
+}
+```
+
+当然，最好再在请求返回头里加上缓存相关的头。只要秉持“文件名变当且仅当文件变”的打包原则，缓存过期时间可以设置足够久。如果允许的话，还可以给项目域的resource-dir路径配置cdn缓存，并且足够久。
+
+测试环境如果SSL证书不受信，可以命令行带参数打开Chrome，让Chrome信任项目源和cdn源：
 
 ```
 "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --unsafely-treat-insecure-origin-as-secure=https://app-domain.com,https://cdn-domain.com --user-data-dir="D:\foo" https://app-domain.com
