@@ -5,9 +5,12 @@ Multi-page Application Server-side Rendering，多页面后端渲染。
 ## 架构特性
 
 1. 多页面，后端控制路由，模板同构、数据直出，SEO友好
-1. 面向页面和组件开发，组件可自由构造、组合
 1. 支持模板碎片，更高的自由度和可复用性
 1. 支持PWA的Service Worker缓存
+1. 面向页面和组件开发，组件可自由构造、组合，主张局部架构按需提升
+1. 关注面分离，约束代码职责
+1. Webpack资源打包，代码切分，遵从文件名变当且仅当文件变的原则
+1. Webpack DevServer + 热替换，本地快速开发
 
 ## 项目结构
 
@@ -27,7 +30,7 @@ build | 构建脚本
 
 ### 生产环境
 
-建议：pre、prod环境。
+建议环境：pre、prod。
 
 ```bash
 npm run build
@@ -35,7 +38,7 @@ npm run build
 
 ### 测试环境
 
-不压缩代码。建议：dev、test环境。
+不压缩代码。建议环境：dev、test。
 
 ```bash
 npm run build:devel
@@ -43,7 +46,7 @@ npm run build:devel
 
 ### 本地开发环境
 
-结合mock数据，使用Webpack DevServer和热加载，本地开发调试。建议：本地环境。
+结合mock数据，使用Webpack DevServer和热加载，本地开发调试。
 
 ```bash
 npm run build:local -- page_name
@@ -51,7 +54,7 @@ npm run build:local -- page_name
 
 ## Service Worker
 
-正式环境和测试环境下，需要在项目域根路经下代理`service-worker.js`文件。
+生产环境和测试环境下，需要在项目域根路经下代理`service-worker.js`文件。
 
 ```
 location /service-worker.js {
