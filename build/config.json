@@ -1,4 +1,5 @@
 {
     "projName": "my_project",
+    "resourceOutputPath": "dist/resource",
     "vendorPath": "build/vendor"
 }

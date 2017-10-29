@@ -24,7 +24,7 @@ const publicPath = devServerConfig.publicPath;
 
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-const vendorFiles = fs.readdirSync(path.resolve(cwd, `dist/resource/${projConf.vendorPath}`)).map(file => {
+const vendorFiles = fs.readdirSync(path.resolve(cwd, `${projConf.resourceOutputPath}/${projConf.vendorPath}`)).map(file => {
     if (/\.js$/.test(file)) return `${projConf.vendorPath}/${file}`;
     return null;
 }).filter(Boolean);
@@ -81,7 +81,7 @@ module.exports = (specifiedEntries, options = {}) => {
         context: path.resolve(cwd, 'src'),
         entry: Object.assign(entries, {}),
         output: {
-            path: path.resolve(cwd, 'dist/resource'),
+            path: path.resolve(cwd, `${projConf.resourceOutputPath}`),
             publicPath: publicPath, // dev-server访问的路径
             filename: options.local ? `${pathPrefix}[name]/[name].[hash:7].js` : `${pathPrefix}[name]/[name].[chunkhash:7].js`
         },
@@ -207,9 +207,9 @@ module.exports = (specifiedEntries, options = {}) => {
                     navigateFallback: publicPath,
                     mergeStaticsConfig: true,
                     stripPrefixMulti: {
-                        'dist': ''
+                        [`${projConf.resourceOutputPath}/`]: publicPath
                     },
-                    staticFileGlobs: vendorFiles.map(file => `dist/resource/${file}`),
+                    staticFileGlobs: vendorFiles.map(file => `${projConf.resourceOutputPath}/${file}`),
                     staticFileGlobsIgnorePatterns: [/\.html$/, /\.map$/, /asset-manifest\.json$/]
                 }
             ),
