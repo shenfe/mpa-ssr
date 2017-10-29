@@ -2,10 +2,11 @@
   "scripts": {
     "test:server": "node ./test/server.js",
     "clean": "rm -rf ./dist/*",
-    "copy": "./node_modules/.bin/shx mkdir -p dist && cd dist && mkdir resource && cp -rf ../src/* ./resource",
-    "build": "npm run clean && npm run copy && cross-env NODE_ENV=production node ./build/build.js",
-    "build:devel": "npm run clean && npm run copy && cross-env NODE_ENV=development node ./build/build.js",
-    "build:local": "npm run clean && npm run copy && cross-env NODE_ENV=development node ./build/build.js --local"
+    "copy": "./node_modules/.bin/shx mkdir -p dist && cd dist && mkdir -p resource && cp -rf ../src/* ./resource",
+    "build:dll": "./node_modules/.bin/webpack --config ./build/webpack.config.dll.js",
+    "build": "npm run copy && cross-env NODE_ENV=production node ./build/build.js",
+    "build:devel": "npm run copy && cross-env NODE_ENV=development node ./build/build.js",
+    "build:local": "npm run copy && cross-env NODE_ENV=development node ./build/build.js --local"
   },
   "dependencies": {
     "velocity-template-engine": "^1.0.0"

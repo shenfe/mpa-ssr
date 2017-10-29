@@ -53,7 +53,25 @@ npm run build:devel
 npm run build:local -- page_name
 ```
 
-## Service Worker
+### 第三方库Dll打包
+
+```bash
+npm run build:dll
+```
+
+## 代码分离
+
+存在分开打包需求的代码包括：
+
+1. 第三方库
+1. 不依赖页面的公共逻辑
+1. 页面的业务逻辑
+
+对于第三方库，推荐使用externals和DllPlugin；使用DllPlugin需注意，在将dll包build完毕后再执行业务代码打包和DevServer。
+
+对于公共逻辑代码，推荐使用CommonsChunkPlugin。
+
+## 使用Service Worker
 
 生产环境和测试环境下，需要在项目域根路经下代理`service-worker.js`文件。
 

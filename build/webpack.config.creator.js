@@ -1,10 +1,11 @@
 const Webpack = require('webpack');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const fs = require('fs');
 const path = require('path');
+
+const projConf = require('./config');
 
 const ejs = require('ejs');
 
@@ -23,6 +24,12 @@ const publicPath = devServerConfig.publicPath;
 
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
+const vendorFiles = fs.readdirSync(path.resolve(cwd, `dist/resource/${projConf.vendorPath}`)).map(file => {
+    if (/\.js$/.test(file)) return `${projConf.vendorPath}/${file}`;
+    return null;
+}).filter(Boolean);
+console.log('vendor files', vendorFiles);
+
 const htmlWebpackPluginCreator = (entries, { local }, publicPath) =>
     Object.keys(entries).map(p =>
         new HtmlWebpackPlugin({
@@ -37,7 +44,8 @@ const htmlWebpackPluginCreator = (entries, { local }, publicPath) =>
                     }, readData(path.resolve(cwd, `mock/page-${p}.json`)))
                 );
                 return ejs.compile(tmpl)(Object.assign({
-                    resourceURL: publicPath
+                    resourceURL: publicPath,
+                    vendorFiles: vendorFiles
                 }, templateParams));
             }
         })
@@ -77,9 +85,12 @@ module.exports = (specifiedEntries, options = {}) => {
             publicPath: publicPath, // dev-server访问的路径
             filename: options.local ? `${pathPrefix}[name]/[name].[hash:7].js` : `${pathPrefix}[name]/[name].[chunkhash:7].js`
         },
+        // externals: {
+        //     jquery: 'jQuery'
+        // },
         resolve: {
             modules: [
-                path.resolve(cwd, 'build'),
+                path.resolve(cwd, 'src/static/lib'),
                 'node_modules'
             ],
             alias: {
@@ -102,19 +113,6 @@ module.exports = (specifiedEntries, options = {}) => {
         stats: isPro ? 'none' : 'verbose',
         module: {
             rules: [
-                {
-                    test: path.resolve(cwd, 'src/static/lib/jquery.js'),
-                    use: [
-                        {
-                            loader: 'expose-loader',
-                            options: 'jQuery'
-                        },
-                        {
-                            loader: 'expose-loader',
-                            options: '$'
-                        }
-                    ]
-                },
                 {
                     test: /\.js[x]?$/,
                     exclude: [
@@ -173,9 +171,17 @@ module.exports = (specifiedEntries, options = {}) => {
                 }
             ]
         },
-        recordsPath: path.resolve(__dirname, './recordsPath.json'),
+        recordsPath: path.resolve(cwd, 'build/recordsPath.json'),
         plugins: [
             ...((options.buildTogether && options.bundleAnalyse) ? [new BundleAnalyzerPlugin()] : []),
+            new Webpack.ProvidePlugin({
+                $: 'jquery',
+                jQuery: 'jquery'
+            }),
+            new Webpack.DllReferencePlugin({
+                context: __dirname,
+                manifest: require('./vendor-manifest.json') // 引入vendor-manifest文件
+            }),
             new Webpack.optimize.CommonsChunkPlugin({
                 name: 'common',
                 filename: options.local ? `${pathPrefix}[name]/[name].[hash:7].js` : `${pathPrefix}[name]/[name].[chunkhash:7].js`,
@@ -191,14 +197,19 @@ module.exports = (specifiedEntries, options = {}) => {
             extractPageCss,
             ...(isPro ? [new OptimizeCssAssetsPlugin()] : []),
             ...htmlWebpackPluginCreator(entries, options, publicPath),
-            ...(isPro ? [new UglifyJSPlugin()] : []),
+            ...(isPro ? [new Webpack.optimize.UglifyJsPlugin()] : []),
             ...(options.local ? [new Webpack.HotModuleReplacementPlugin()] : []),
             new SWPrecacheWebpackPlugin(
                 {
-                    cacheId: 'project-name',
+                    cacheId: projConf.projName,
                     dontCacheBustUrlsMatching: /.*/, // 重要
                     minify: isPro,
                     navigateFallback: publicPath,
+                    mergeStaticsConfig: true,
+                    stripPrefixMulti: {
+                        'dist': ''
+                    },
+                    staticFileGlobs: vendorFiles.map(file => `dist/resource/${file}`),
                     staticFileGlobsIgnorePatterns: [/\.html$/, /\.map$/, /asset-manifest\.json$/]
                 }
             ),
