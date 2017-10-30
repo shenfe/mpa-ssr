@@ -1,7 +1,7 @@
 {
   "scripts": {
     "test:server": "node ./test/server.js",
-    "clean": "rm -rf ./dist/page/* && rm -rf ./dist/resource/*",
+    "clean": "rm -rf ./dist/*.js && rm -rf ./dist/page && rm -rf ./dist/resource",
     "copy": "mkdir -p dist && cd dist && mkdir -p resource && cp -rf ../src/* ./resource",
     "build:dll": "./node_modules/.bin/webpack --config ./build/webpack.config.dll.js",
     "build": "npm run copy && cross-env NODE_ENV=production node ./build/build.js",
