@@ -88,6 +88,12 @@ module.exports = (specifiedEntries, options = {}) => {
         // externals: {
         //     jquery: 'jQuery'
         // },
+        resolveLoader: {
+            modules: [
+                path.resolve(cwd, 'build/webpack-loader'),
+                'node_modules'
+            ]
+        },
         resolve: {
             modules: [
                 path.resolve(cwd, 'src/static/lib'),
@@ -137,7 +143,7 @@ module.exports = (specifiedEntries, options = {}) => {
                 },
                 {
                     test: /\.(vm|html)$/,
-                    use: ['raw-loader']
+                    use: ['vm-loader']
                 },
                 {
                     test: /\.(css)$/,
