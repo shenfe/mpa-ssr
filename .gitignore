@@ -1,5 +1,7 @@
 .DS_Store
-dist
+dist/*.js
+dist/page
+dist/resource
 node_modules
 package-lock.json
 build/recordsPath.json
