@@ -101,7 +101,7 @@ module.exports = (specifiedEntries, options = {}) => {
                 static: path.resolve(cwd, 'src/static/')
             }
         },
-        watch: false, // options.local,
+        watch: options.local,
         performance: {
             hints: options.local ? false : 'warning', // 当资源不符合性能规则时，以什么方式进行提示
             maxAssetSize: 400000, // 单个资源允许的最大文件容量，单位：字节，默认250kb
