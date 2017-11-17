@@ -12,6 +12,7 @@ Multi-page Application Server-side Rendering，多页面后端渲染。
 1. 关注面分离，约束代码职责
 1. Webpack资源打包，代码切分，遵从文件名变当且仅当文件变的原则
 1. Webpack DevServer + 热替换，本地快速开发
+1. 移动端基于px2rem方案做样式适配
 
 ## 项目结构
 
