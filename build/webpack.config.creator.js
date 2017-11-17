@@ -62,7 +62,17 @@ const extractTextOptions = sass => ({
                     [require('autoprefixer')()]
             }
         },
-        ...(sass ? ['sass-loader'] : [])
+        ...(sass ? ['sass-loader'] : []),
+        {
+            loader: 'px2rem-loader',
+            options: {
+                remUnit: 75,
+                baseDpr: 1,
+                threeVersion: false,
+                remVersion: true,
+                remPrecision: 8
+            }
+        }
     ]
 });
 
