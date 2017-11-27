@@ -74,7 +74,7 @@ const templateExtract = (absFilePath, data) => {
     let findParseModules = matchReg(tmpl, /(?:#parseModule\(")([^()]*)(?:"\))/g)
         .concat(matchReg(tmpl, /(?:#parseModule\(')([^()]*)(?:'\))/g));
     findParseTmpls.forEach(p => {
-        let dep = (p[1].charAt(0) === '/') ? path.resolve(cwd, 'src' + p[1]) : path.resolve(absFilePath, p[1]);
+        let dep = (p[1].charAt(0) === '/') ? path.resolve(cwd, 'src' + p[1]) : path.resolve(path.dirname(absFilePath), p[1]);
         deps[dep] = true;
         let t = templateExtract(dep);
         t.require.forEach(r => {
