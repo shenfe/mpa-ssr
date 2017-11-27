@@ -5,5 +5,13 @@ module.exports = function (content) {
     this.value = content;
     console.log(`vm-loader is loading "${this.resourcePath}"`);
     content = templateExtract(this.resourcePath);
-    return 'module.exports = ' + JSON.stringify(content);
+    return `
+        if (module.hot) {
+            module.hot.accept();
+            module.hot.accept(${JSON.stringify(content.require)}, function () {
+                // callback
+            });
+        };
+        module.exports=${JSON.stringify(content.output)};
+    `;
 };

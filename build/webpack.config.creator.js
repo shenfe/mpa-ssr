@@ -42,7 +42,7 @@ const htmlWebpackPluginCreator = (entries, { local }, publicPath) =>
                     local && Object.assign({
                         resourceURL: publicPath
                     }, readData(path.resolve(cwd, `mock/page-${p}.json`)))
-                );
+                ).output;
                 return ejs.compile(tmpl)(Object.assign({
                     resourceURL: publicPath,
                     vendorFiles: vendorFiles
@@ -51,29 +51,32 @@ const htmlWebpackPluginCreator = (entries, { local }, publicPath) =>
         })
     );
 
+const cssLoaders = sass => ([
+    'style-loader',
+    'css-loader',
+    {
+        loader: 'postcss-loader',
+        options: {
+            plugins: (loader) =>
+                [require('autoprefixer')()]
+        }
+    },
+    ...(sass ? ['sass-loader'] : []),
+    {
+        loader: 'px2rem-loader',
+        options: {
+            remUnit: 75,
+            baseDpr: 1,
+            threeVersion: false,
+            remVersion: true,
+            remPrecision: 8
+        }
+    }
+]);
+
 const extractTextOptions = sass => ({
     fallback: 'style-loader',
-    use: [
-        'css-loader',
-        {
-            loader: 'postcss-loader',
-            options: {
-                plugins: (loader) =>
-                    [require('autoprefixer')()]
-            }
-        },
-        ...(sass ? ['sass-loader'] : []),
-        {
-            loader: 'px2rem-loader',
-            options: {
-                remUnit: 75,
-                baseDpr: 1,
-                threeVersion: false,
-                remVersion: true,
-                remPrecision: 8
-            }
-        }
-    ]
+    use: cssLoaders(sass).slice(1)
 });
 
 module.exports = (specifiedEntries, options = {}) => {
@@ -161,7 +164,7 @@ module.exports = (specifiedEntries, options = {}) => {
                         path.resolve(cwd, 'src/module'),
                         path.resolve(cwd, 'src/page')
                     ],
-                    use: extractPageCss.extract(extractTextOptions())
+                    use: options.local ? cssLoaders() : extractPageCss.extract(extractTextOptions())
                 },
                 {
                     test: /\.(sass|scss)$/,
@@ -169,21 +172,14 @@ module.exports = (specifiedEntries, options = {}) => {
                         path.resolve(cwd, 'src/module'),
                         path.resolve(cwd, 'src/page')
                     ],
-                    use: extractPageCss.extract(extractTextOptions(true))
+                    use: options.local ? cssLoaders(true) : extractPageCss.extract(extractTextOptions(true))
                 },
                 {
                     test: /\.(css)$/,
                     include: [
                         path.resolve(cwd, 'src/static')
                     ],
-                    use: extractCommonCss.extract(extractTextOptions())
-                },
-                {
-                    test: /\.(sass|scss)$/,
-                    include: [
-                        path.resolve(cwd, 'src/static')
-                    ],
-                    use: extractCommonCss.extract(extractTextOptions(true))
+                    use: options.local ? cssLoaders() : extractCommonCss.extract(extractTextOptions())
                 }
             ]
         },
@@ -209,12 +205,15 @@ module.exports = (specifiedEntries, options = {}) => {
                         || (module.resource && module.resource.split('\\').join('/').indexOf('src/static/lib') !== -1);
                 }
             }),
-            extractCommonCss,
-            extractPageCss,
+            ...(options.local ? [] : [extractCommonCss]),
+            ...(options.local ? [] : [extractPageCss]),
             ...(isPro ? [new OptimizeCssAssetsPlugin()] : []),
             ...htmlWebpackPluginCreator(entries, options, publicPath),
             ...(isPro ? [new Webpack.optimize.UglifyJsPlugin()] : []),
-            ...(options.local ? [new Webpack.HotModuleReplacementPlugin()] : []),
+            ...(options.local ? [
+                new Webpack.NamedModulesPlugin(),
+                new Webpack.HotModuleReplacementPlugin()
+            ] : []),
             new SWPrecacheWebpackPlugin(
                 {
                     cacheId: projConf.projName,

@@ -6,7 +6,7 @@ const port = 3000;
 
 const appDomain = '';
 const cdnDomain = '';
-const appResourcePath = '/resource/';
+const appResourcePath = '/resource/'; // 重要，静态资源访问地址
 
 module.exports = {
     port: port,

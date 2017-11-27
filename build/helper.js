@@ -68,19 +68,35 @@ const getPagesEntry = (specifiedPages, options = {}, devServer) => {
 
 const templateExtract = (absFilePath, data) => {
     let tmpl = read(absFilePath);
+    let deps = {};
     let findParseTmpls = matchReg(tmpl, /(?:#parseTmpl\(")([^()]*)(?:"\))/g)
         .concat(matchReg(tmpl, /(?:#parseTmpl\(')([^()]*)(?:'\))/g));
     let findParseModules = matchReg(tmpl, /(?:#parseModule\(")([^()]*)(?:"\))/g)
         .concat(matchReg(tmpl, /(?:#parseModule\(')([^()]*)(?:'\))/g));
     findParseTmpls.forEach(p => {
-        tmpl = tmpl.replaceAll(p[0], templateExtract(path.resolve(cwd, 'src/.' + p[1])));
+        let dep = path.resolve(cwd, 'src/.' + p[1]);
+        deps[dep] = true;
+        let t = templateExtract(dep);
+        t.require.forEach(r => {
+            deps[r] = true;
+        });
+        tmpl = tmpl.replaceAll(p[0], t.output);
     });
     findParseModules.forEach(p => {
-        tmpl = tmpl.replaceAll(p[0], templateExtract(path.resolve(cwd, 'src/module/' + p[1] + '/index.html')));
+        let dep = path.resolve(cwd, 'src/module/' + p[1] + '/index.html');
+        deps[dep] = true;
+        let t = templateExtract(dep);
+        t.require.forEach(r => {
+            deps[r] = true;
+        });
+        tmpl = tmpl.replaceAll(p[0], t.output);
     });
 
     if (data) tmpl = render(tmpl, data);
-    return tmpl;
+    return {
+        require: Object.keys(deps),
+        output: tmpl
+    };
 };
 
 const readData = absFilePath => {
