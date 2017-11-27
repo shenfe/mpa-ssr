@@ -1,4 +1,4 @@
-require('./index.css');
+// require('./index.css');
 
 var detailTmpl = require('./detail.html');
 

@@ -133,6 +133,14 @@ module.exports = (specifiedEntries, options = {}) => {
         module: {
             rules: [
                 {
+                    test: /(module|page)\/[a-zA-Z0-9-_$]+\/index\.js[x]?$/,
+                    include: [
+                        path.resolve(cwd, './src/module'),
+                        path.resolve(cwd, './src/page')
+                    ],
+                    use: ['index-loader', 'babel-loader']
+                },
+                {
                     test: /\.js[x]?$/,
                     exclude: [
                         path.resolve(cwd, './node_modules')
