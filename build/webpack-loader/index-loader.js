@@ -10,6 +10,7 @@ module.exports = function (content) {
     if (String(query.local) === 'true' && query.type === 'module') {
         injectTemplateRender = `(function () {
             let placeholder = document.getElementById('placeholder-${path.basename(path.dirname(this.resourcePath))}');
+            if (!placeholder) return;
             let data = JSON.parse(document.getElementById('here-is-ssr-data').value);
             placeholder.parentNode.innerHTML = window.VTE.render(require('./index.html'), data);
         })();
