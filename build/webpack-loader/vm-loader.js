@@ -3,12 +3,18 @@ const path = require('path');
 const { templateExtract } = require('../helper.js');
 
 module.exports = function (content) {
-    // this.cacheable && this.cacheable();
+    this.cacheable && this.cacheable();
     this.value = content;
-    console.log(`vm-loader is loading "${this.resourcePath}"`);
+    console.log(`"${this.resourcePath}" loaded`);
     content = templateExtract(this.resourcePath);
     content.require = content.require.map(r => ('./' + path.relative(path.dirname(this.resourcePath), r)));
     console.log('it requires: ', content.require);
+
+    let _this = this;
+    content.require.forEach(function (r) {
+        _this.addDependency(r);
+    });
+
     return `
         if (module.hot) {
             module.hot.accept('./${path.basename(this.resourcePath)}', function () {

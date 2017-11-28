@@ -133,7 +133,7 @@ module.exports = (specifiedEntries, options = {}) => {
         module: {
             rules: [
                 {
-                    test: /(module|page)\/[a-zA-Z0-9-_$]+\/index\.js[x]?$/,
+                    test: /index\.js[x]?$/,
                     include: [
                         path.resolve(cwd, './src/module'),
                         path.resolve(cwd, './src/page')
@@ -191,7 +191,7 @@ module.exports = (specifiedEntries, options = {}) => {
                 }
             ]
         },
-        recordsPath: path.resolve(cwd, 'build/recordsPath.json'),
+        recordsPath: path.resolve(cwd, 'build/records-path.json'),
         plugins: [
             ...((options.buildTogether && options.bundleAnalyse) ? [new BundleAnalyzerPlugin()] : []),
             new Webpack.ProvidePlugin({

@@ -9,6 +9,7 @@
     "build:local": "npm run copy && cross-env NODE_ENV=development node ./build/build.js --local"
   },
   "dependencies": {
+    "azzert": "^1.0.0",
     "velocity-template-engine": "^1.0.0"
   },
   "devDependencies": {

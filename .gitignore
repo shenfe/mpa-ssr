@@ -1,7 +1,7 @@
 .DS_Store
-dist/*.js
-dist/page
-dist/resource
 node_modules
+dist
 package-lock.json
-build/recordsPath.json
+build/page-entry.json
+build/records-path.json
+build/vendor-manifest.json

@@ -7,6 +7,7 @@ const options = {
     buildTogether: true // 是所有页面作为multi-entry一次性用webpack构建，还是每个页面分开、多次构建
 };
 
+const fs = require('fs');
 const path = require('path');
 require('shelljs/global');
 
@@ -29,14 +30,30 @@ args.forEach(function (val, index, array) {
 
 const webpackConfigBuilder = require('./webpack.config.builder.js');
 
+const devServerConfig = require('./server.config');
+
 const pages = inputPages.length ? inputPages : Object.keys(require('./helper.js').getPagesEntry());
+
+const open = require('open');
+
+const projConf = require('./config');
 
 console.log(pages);
 
+const cwd = process.cwd();
+
+// 将被构建的页面记录在临时的json文件中，以供devserver在启动时读取
+fs.writeFileSync(path.join(cwd, 'build', projConf.pageEntryRecord), JSON.stringify(pages), 'utf8');
+
+let openOnce = false;
+
 if (options.buildTogether) {
     webpackConfigBuilder(pages, options, () => {
-        let cwd = process.cwd();
         cp(path.resolve(cwd, 'dist/resource/service-worker.js'), path.resolve(cwd, 'dist/service-worker.js'));
+        if (!openOnce) {
+            options.local && open(`http://127.0.0.1:${devServerConfig.port}/${projConf.entryRoute}`);
+            openOnce = true;
+        }
     });
 } else {
     const build = i =>
