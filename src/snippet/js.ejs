@@ -1,3 +1,7 @@
+<% if (local) { %>
+<textarea id="here-is-ssr-data"><%= JSON.stringify(ssrData) %></textarea>
+<% } %>
+
 <% for (var i = 0; i < vendorFiles.length; i++) { %>
 <script type="text/javascript" src="<%= resourceURL %><%= vendorFiles[i] %>"></script>
 <% } %>

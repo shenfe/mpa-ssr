@@ -37,15 +37,19 @@ const htmlWebpackPluginCreator = (entries, { local }, publicPath) =>
             inject: false,
             excludeChunks: Object.keys(entries).filter(q => p !== q),
             templateContent: templateParams => {
+                const data = readData(path.resolve(cwd, `mock/page-${p}.json`));
                 let tmpl = templateExtract(
                     path.resolve(cwd, `src/page/${p}/index.html`),
                     local && Object.assign({
                         resourceURL: publicPath
-                    }, readData(path.resolve(cwd, `mock/page-${p}.json`)))
+                    }, data),
+                    local
                 ).output;
                 return ejs.compile(tmpl)(Object.assign({
                     resourceURL: publicPath,
-                    vendorFiles: vendorFiles
+                    vendorFiles: vendorFiles,
+                    local: local,
+                    ssrData: data
                 }, templateParams));
             }
         })
@@ -138,7 +142,12 @@ module.exports = (specifiedEntries, options = {}) => {
                         path.resolve(cwd, './src/module'),
                         path.resolve(cwd, './src/page')
                     ],
-                    use: ['index-loader', 'babel-loader']
+                    use: [{
+                        loader: 'index-loader',
+                        options: {
+                            local: options.local
+                        }
+                    }, 'babel-loader']
                 },
                 {
                     test: /\.js[x]?$/,

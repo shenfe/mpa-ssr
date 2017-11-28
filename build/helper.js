@@ -66,7 +66,7 @@ const getPagesEntry = (specifiedPages, options = {}, devServer) => {
     return ps;
 };
 
-const templateExtract = (absFilePath, data) => {
+const templateExtract = (absFilePath, data, local) => {
     let tmpl = read(absFilePath);
     let deps = {};
     let findParseTmpls = matchReg(tmpl, /(?:#parseTmpl\(")([^()]*)(?:"\))/g)
@@ -89,7 +89,7 @@ const templateExtract = (absFilePath, data) => {
         t.require.forEach(r => {
             deps[r] = true;
         });
-        tmpl = tmpl.replaceAll(p[0], t.output);
+        tmpl = tmpl.replaceAll(p[0], local ? `<div id="placeholder-${p[1]}"></div>` : t.output);
     });
 
     if (data) tmpl = render(tmpl, data);
