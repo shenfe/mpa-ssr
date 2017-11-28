@@ -139,13 +139,26 @@ module.exports = (specifiedEntries, options = {}) => {
                 {
                     test: /index\.js[x]?$/,
                     include: [
-                        path.resolve(cwd, './src/module'),
+                        path.resolve(cwd, './src/module')
+                    ],
+                    use: [{
+                        loader: 'index-loader',
+                        options: {
+                            local: options.local,
+                            type: 'module'
+                        }
+                    }, 'babel-loader']
+                },
+                {
+                    test: /index\.js[x]?$/,
+                    include: [
                         path.resolve(cwd, './src/page')
                     ],
                     use: [{
                         loader: 'index-loader',
                         options: {
-                            local: options.local
+                            local: options.local,
+                            type: 'page'
                         }
                     }, 'babel-loader']
                 },

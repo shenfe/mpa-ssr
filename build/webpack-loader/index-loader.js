@@ -7,12 +7,18 @@ module.exports = function (content) {
     let query = loaderUtils.getOptions(this) || {};
     console.log(query);
     let injectTemplateRender = '';
-    if (String(query.local) === 'true') {
+    if (String(query.local) === 'true' && query.type === 'module') {
         injectTemplateRender = `(function () {
             let placeholder = document.getElementById('placeholder-${path.basename(path.dirname(this.resourcePath))}');
             let data = JSON.parse(document.getElementById('here-is-ssr-data').value);
-            placeholder.parentNode.innerHTML = window.VTE.render(require('index.html'), data);
-        })();`;
+            placeholder.parentNode.innerHTML = window.VTE.render(require('./index.html'), data);
+        })();
+        if (module.hot) {
+            module.hot.accept('./index.html', function () {
+                location.reload();
+            });
+        }
+        `;
     }
     this.addDependency('./index.html');
 

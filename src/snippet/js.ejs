@@ -1,5 +1,5 @@
 <% if (local) { %>
-<textarea id="here-is-ssr-data"><%= JSON.stringify(ssrData) %></textarea>
+<textarea id="here-is-ssr-data" style="display: none;"><%= JSON.stringify(ssrData) %></textarea>
 <% } %>
 
 <% for (var i = 0; i < vendorFiles.length; i++) { %>
