@@ -30,6 +30,12 @@ build | 构建脚本
 
 ## 构建
 
+### 第三方库Dll打包
+
+```bash
+npm run build:dll
+```
+
 ### 生产环境
 
 建议环境：pre、prod。
@@ -54,11 +60,16 @@ npm run build:devel
 npm run build:local -- page_name
 ```
 
-### 第三方库Dll打包
+## 本地服务
 
-```bash
-npm run build:dll
+如果是本地开发环境，则默认使用Webpack DevServer。
+
+如果想预览测试或正式环境的效果，则在build之后执行：
+
 ```
+npm run serve
+```
+
 
 ## 代码分离
 
@@ -74,7 +85,9 @@ npm run build:dll
 
 ## 使用Service Worker
 
-生产环境和测试环境下，需要在项目域根路经下代理`service-worker.js`文件。
+Service Worker的使用是可选的。如果不需要，则：1) 在Webpack配置的插件中将SWPrecacheWebpackPlugin移除，2) 在snippet/head.html中将加载Service Worker的脚本标签移除。
+
+生产环境和测试环境下，建议在项目域根路经下代理`service-worker.js`文件和其他静态资源。
 
 ```
 location /service-worker.js {
@@ -87,16 +100,10 @@ location /resource-dir/ {
 }
 ```
 
-当然，最好再在请求返回头里加上缓存相关的头。只要秉持“文件名变当且仅当文件变”的打包原则，缓存过期时间可以设置足够久。如果允许的话，还可以给项目域的resource-dir路径配置cdn缓存，并且足够久。
+当然，最好再在请求响应头里加上缓存相关的头。只要秉持“文件名变当且仅当文件变”的打包原则，缓存过期时间可以设置足够久。如果允许的话，还可以给项目域的resource-dir路径配置cdn缓存，并且足够久。
 
 测试环境如果SSL证书不受信，可以命令行带参数打开Chrome，让Chrome信任项目源和cdn源：
 
 ```
 "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --unsafely-treat-insecure-origin-as-secure=https://app-domain.com,https://cdn-domain.com --user-data-dir="D:\foo" https://app-domain.com
-```
-
-本地开发环境，则在build之后，在`dist`目录下执行：
-
-```
-python -m SimpleHTTPServer 3000
 ```

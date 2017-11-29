@@ -95,9 +95,13 @@ const templateExtract = (absFilePath, data, local) => {
         );
     });
 
-    if (data) tmpl = render(tmpl, data);
+    if (data) {
+        tmpl = render(tmpl, data);
+    }
+
     return {
         require: Object.keys(deps),
+        context: data,
         output: tmpl
     };
 };

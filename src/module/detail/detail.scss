@@ -1,9 +1,13 @@
-.detail-field {
-    padding: 0 2em;
+.detail-content {
+    margin: 20px 40px; /*no*/
+    padding: 20px;
+    border: 1px #ccc solid;
+    background: #eee;
     font-size: 20px;
 }
 
 .ending {
     text-align: center;
     font-size: 12px;
+    margin-top: 20px;
 }

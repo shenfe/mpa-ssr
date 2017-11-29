@@ -1,15 +1,23 @@
 {
+    "seo": {
+        "title": "list",
+        "keywords": "list",
+        "description": "list"
+    },
     "login": true,
     "diaries": [
         {
+            "id": 1,
             "title": "Day 1",
             "date": "2017/11/27"
         },
         {
+            "id": 2,
             "title": "Day 2",
             "date": "2017/11/28"
         },
         {
+            "id": 3,
             "title": "Day 3",
             "date": "2017/11/29"
         }

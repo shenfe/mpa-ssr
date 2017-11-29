@@ -21,9 +21,10 @@ const fetchDetail = fetch('/api/getDetail')
         if ($assert(res, {
             code: _ => _ === 200,
             data: {
-                username: 's',
-                gender: 's'
+                content: 's'
             }
+        }, {
+            allowMore: true
         })) {
             return res.data;
         }
@@ -36,7 +37,7 @@ module.exports = function ($container) {
         .then(data => {
             $target
                 .find('[node-type="the-detail"]')
-                .html(window.VTE.render(detailTmpl, { name: data.username, sex: data.gender }));
+                .html(window.VTE.render(detailTmpl, data));
         })
         .catch(err => console.error(err));
 };

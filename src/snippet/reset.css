@@ -2,8 +2,18 @@ html {
     font-size: 75px;
 }
 
+body {
+    font-size: 20px;
+}
+
 html, body {
     margin: 0;
     border: 0;
     padding: 0;
+}
+
+.global-clearfix::after {
+    content: ' ';
+    clear: both;
+    display: block;
 }

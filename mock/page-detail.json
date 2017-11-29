@@ -1,7 +1,14 @@
 {
+    "seo": {
+        "title": "detail",
+        "keywords": "detail",
+        "description": "detail"
+    },
     "login": true,
     "diary": {
+        "id": 3,
         "title": "Day 3",
-        "date": "2017/11/29"
+        "date": "2017/11/29",
+        "content": "Today is a nice day."
     }
 }

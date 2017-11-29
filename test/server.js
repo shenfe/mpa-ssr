@@ -12,10 +12,16 @@ args.forEach(function (val, index, array) {
     }
 });
 
+const vte = require('velocity-template-engine');
+
 const fs = require('fs');
 const path = require('path');
+const cwd = process.cwd();
 const express = require('express');
 const app = express();
+
+const helper = require('../build/helper');
+const open = require('open');
 
 const http = require('http');
 
@@ -29,8 +35,31 @@ const server = options.https ?
     https.createServer(credentials, app) :
     http.createServer(app);
 
-server.listen(3000, function () {
-    console.log('Listening on port %d', server.address().port);
+const port = 3000;
+
+server.listen(port, function () {
+    console.log('Listening on port %d', port);
 });
 
-app.use(express.static(path.resolve(process.cwd(), 'dist')));
+app.use(express.static(path.resolve(cwd, 'dist')));
+
+const pages = fs.readdirSync(path.resolve(cwd, 'dist/page')).map(p => p.replace(/\.[a-z]+$/, ''));
+
+console.log(pages);
+
+app.get(`/`, function (req, res) {
+    res.send('<ul>' + pages.map(p => `<li><a href="/${p}" target="_blank">${p}</a></li>`).join('') + '</ul>');
+});
+
+pages.forEach(p => {
+    app.get(`/${p}`, function (req, res) {
+        res.send(
+            vte.render(
+                helper.readFile(path.resolve(cwd, `dist/page/${p}.html`)),
+                helper.readData(path.resolve(cwd, `mock/page-${p}.json`))
+            )
+        );
+    })
+});
+
+open(`http://127.0.0.1:${port}`);

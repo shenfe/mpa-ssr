@@ -1,7 +1,9 @@
 #set($title = "${seo.title}")
 #set($keywords = "${seo.keywords}")
 #set($description = "${seo.description}")
-#set($metaImageUrl = "${publicPath}static/logo.png")
+#set($metaImageUrl = "<%= resourceURL %>static/logo.png")
+
+#set($pageName = "list")
 
 <!doctype html>
 <html>

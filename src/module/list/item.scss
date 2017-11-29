@@ -1,8 +1,11 @@
 $height: 48px;
+$margin: 40px;
 
 .item {
+    display: block;
     width: 100%;
     height: $height;
+    color: #000;
 }
 
 .item-title {
@@ -11,7 +14,7 @@ $height: 48px;
     height: $height;
     line-height: $height;
     font-size: 24px;
-    text-indent: 2em;
+    text-indent: $margin; /*no*/
 }
 
 .item-date {
@@ -19,9 +22,10 @@ $height: 48px;
     float: left;
     width: 40%;
     height: $height;
-    padding-right: 2em;
+    padding-right: $margin; /*no*/
     box-sizing: border-box;
     text-align: right;
+    font-style: italic;
     line-height: $height;
     color: #ccc;
     font-size: 16px;

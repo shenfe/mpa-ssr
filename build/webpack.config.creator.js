@@ -38,18 +38,18 @@ const htmlWebpackPluginCreator = (entries, { local }, publicPath) =>
             excludeChunks: Object.keys(entries).filter(q => p !== q),
             templateContent: templateParams => {
                 const data = readData(path.resolve(cwd, `mock/page-${p}.json`));
-                let tmpl = templateExtract(
+                let te = templateExtract(
                     path.resolve(cwd, `src/page/${p}/index.html`),
                     local && Object.assign({
                         resourceURL: publicPath
                     }, data),
                     local
-                ).output;
-                return ejs.compile(tmpl)(Object.assign({
+                );
+                return ejs.compile(te.output)(Object.assign({
                     resourceURL: publicPath,
                     vendorFiles: vendorFiles,
                     local: local,
-                    ssrData: data
+                    ssrData: te.context
                 }, templateParams));
             }
         })
