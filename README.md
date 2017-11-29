@@ -12,7 +12,7 @@ Multi-page Application Server-side Rendering，多页面后端渲染。
 1. 关注面分离，约束代码职责
 1. Webpack资源打包，代码切分，遵从文件名变当且仅当文件变的原则
 1. Webpack DevServer + 热替换，本地快速开发
-1. 移动端基于px2rem方案做样式适配
+1. 移动端可基于px2rem方案做样式适配
 
 ## 项目结构
 
@@ -27,6 +27,20 @@ src/static | 公用静态文件
 dist | 发布文件
 mock | 开发测试数据
 build | 构建脚本
+
+## 主要命令
+
+### 构建并启动本地开发环境
+
+```bash
+npm run clean && npm run build:dll && npm run build:local
+```
+
+### 构建线上环境代码并在本地预览
+
+```bash
+npm run clean && npm run build:dll && npm run build && npm run serve
+```
 
 ## 构建
 

@@ -36,5 +36,5 @@ module.exports = function (content) {
 
     console.log(`${this.resourcePath} has been injected with css.`);
 
-    return injectTemplateRender + content;
+    return injectTemplateRender + content + `;require('./index.html');`;
 };

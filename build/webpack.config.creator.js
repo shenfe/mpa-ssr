@@ -91,7 +91,7 @@ module.exports = (specifiedEntries, options = {}) => {
     let extractCommonCss = new ExtractTextPlugin(`${pathPrefix}common/common.[contenthash:7].css`);
 
     return {
-        devtool: options.local ? 'cheap-module-eval-source-map' : 'cheap-module-source-map',
+        devtool: options.local ? 'cheap-module-eval-source-map' : 'nosources-source-map',
         target: 'web',
         devServer: options.local ? devServerConfig : undefined,
         context: path.resolve(cwd, 'src'),
@@ -184,7 +184,7 @@ module.exports = (specifiedEntries, options = {}) => {
                     use: ['url-loader']
                 },
                 {
-                    test: /\.(vm|html)$/,
+                    test: /\.(vm|html|ejs)$/,
                     use: ['vm-loader']
                 },
                 {
