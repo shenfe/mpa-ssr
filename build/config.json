@@ -1,5 +1,6 @@
 {
     "projName": "my_project",
+    "resourceVisitPath": "/resource/",
     "resourceOutputPath": "dist/resource",
     "vendorPath": "build/vendor",
     "pageEntryRecord": "page-entry.json",

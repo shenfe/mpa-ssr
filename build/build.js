@@ -30,7 +30,7 @@ args.forEach(function (val, index, array) {
 
 const webpackConfigBuilder = require('./webpack.config.builder.js');
 
-const devServerConfig = require('./server.config');
+const devServerPort = require('./server.config').port;
 
 const pages = inputPages.length ? inputPages : Object.keys(require('./helper.js').getPagesEntry());
 
@@ -51,7 +51,7 @@ if (options.buildTogether) {
     webpackConfigBuilder(pages, options, () => {
         cp(path.resolve(cwd, 'dist/resource/service-worker.js'), path.resolve(cwd, 'dist/service-worker.js'));
         if (!openOnce) {
-            options.local && open(`http://127.0.0.1:${devServerConfig.port}/${projConf.entryRoute}`);
+            options.local && open(`http://127.0.0.1:${devServerPort}/${projConf.entryRoute}`);
             openOnce = true;
         }
     });
