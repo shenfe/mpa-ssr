@@ -89,7 +89,10 @@ const templateExtract = (absFilePath, data, local) => {
         t.require.forEach(r => {
             deps[r] = true;
         });
-        tmpl = tmpl.replaceAll(p[0], local ? `<div id="placeholder-${p[1]}"></div>` : t.output);
+        tmpl = tmpl.replaceAll(
+            p[0],
+            `<div module="${p[1]}">` + (local ? `<div id="placeholder-${p[1]}"></div>` : t.output) + `</div>`
+        );
     });
 
     if (data) tmpl = render(tmpl, data);

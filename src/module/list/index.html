@@ -1,8 +1,6 @@
-## This is `list` template view.
+## This is `list` module view.
 
-#set($pageName = "list")
-
-## A module can include another module as well.
-#parseModule("header")
-
-<div id="list-container"></div>
+<div node-type="the-list">
+    #set($list = $diaries)
+    #parseTmpl("list.html")
+</div>

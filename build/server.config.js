@@ -13,6 +13,8 @@ const projConf = require('./config');
 const entryRoute = projConf.entryRoute;
 const pageEntryRecordFile = path.join(process.cwd(), 'build', projConf.pageEntryRecord);
 
+const { readData } = require('./helper');
+
 module.exports = {
     port: port,
     host: '0.0.0.0',
@@ -42,10 +44,10 @@ module.exports = {
 
         // 示例：mock接口
         app.get('/api/getDetail', function (req, res) {
-            res.json({
-                username: 'Tom',
-                gender: 'Male'
-            });
+            res.json(readData(path.resolve(__dirname, '../mock/api-get-detail.json')));
+        });
+        app.get('/api/getList', function (req, res) {
+            res.json(readData(path.resolve(__dirname, '../mock/api-get-list.json')));
         });
     },
     proxy: { // See [devserver-proxy](https://webpack.js.org/configuration/dev-server/#devserver-proxy)

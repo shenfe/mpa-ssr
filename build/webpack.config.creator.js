@@ -62,20 +62,19 @@ const cssLoaders = sass => ([
         loader: 'postcss-loader',
         options: {
             plugins: (loader) =>
-                [require('autoprefixer')()]
+                [
+                    require('autoprefixer')(),
+                    require('postcss-px2rem')({
+                        remUnit: 75,
+                        baseDpr: 1,
+                        threeVersion: false,
+                        remVersion: true,
+                        remPrecision: 8
+                    })
+                ]
         }
     },
-    ...(sass ? ['sass-loader'] : []),
-    {
-        loader: 'px2rem-loader',
-        options: {
-            remUnit: 75,
-            baseDpr: 1,
-            threeVersion: false,
-            remVersion: true,
-            remPrecision: 8
-        }
-    }
+    ...(sass ? ['sass-loader'] : [])
 ]);
 
 const extractTextOptions = sass => ({
@@ -235,15 +234,15 @@ module.exports = (specifiedEntries, options = {}) => {
                         || (module.resource && module.resource.split('\\').join('/').indexOf('src/static/lib') !== -1);
                 }
             }),
-            ...(options.local ? [] : [extractCommonCss]),
-            ...(options.local ? [] : [extractPageCss]),
-            ...(isPro ? [new OptimizeCssAssetsPlugin()] : []),
-            ...htmlWebpackPluginCreator(entries, options, publicPath),
-            ...(isPro ? [new Webpack.optimize.UglifyJsPlugin()] : []),
             ...(options.local ? [
                 new Webpack.NamedModulesPlugin(),
                 new Webpack.HotModuleReplacementPlugin()
-            ] : []),
+            ] : [
+                extractCommonCss,
+                extractPageCss
+            ]),
+            ...(isPro ? [new OptimizeCssAssetsPlugin(), new Webpack.optimize.UglifyJsPlugin()] : []),
+            ...htmlWebpackPluginCreator(entries, options, publicPath),
             new SWPrecacheWebpackPlugin(
                 {
                     cacheId: projConf.projName,

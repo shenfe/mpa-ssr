@@ -1,0 +1,9 @@
+html {
+    font-size: 75px;
+}
+
+html, body {
+    margin: 0;
+    border: 0;
+    padding: 0;
+}

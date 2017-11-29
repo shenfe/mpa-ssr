@@ -1,14 +1,15 @@
 const EBUS = require('script/util/pubsub');
 
-const header = require('module/header/index.js');
+let $target;
 
+// 监听外部事件
 EBUS.on('logout', function (data) {
-    // ...
+    console.log('user log out', data);
+});
+EBUS.on('login', function (data) {
+    console.log('user log in', data);
 });
 
-const listTmpl = require('./list.html');
-
 module.exports = function ($container) {
-    header(document.querySelector('#header'));
-    $container.find('#list-container').html(window.VTE.render(listTmpl));
+    $target = $container;
 };

@@ -1,2 +1,8 @@
-## This is `detail` template view.
-#parseTmpl("detail.html")
+## This is `detail` module view.
+
+#set($item = $diary)
+#parseTmpl("/module/list/item.html")
+
+<div node-type="the-detail">
+    loading...
+</div>

@@ -1,4 +1,4 @@
-## This is `header` template view.
-<div id="header" page="$!{pageName}">
-    <button id="logout">log out</button>
+## This is `header` module view.
+<div id="header" data-status="$!{login}">
+    <button node-type="logio">log #if($!{login})out#{else}in#end</button>
 </div>
