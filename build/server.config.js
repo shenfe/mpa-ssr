@@ -3,17 +3,23 @@ const path = require('path');
 
 const ip = require('ip');
 const ipAddr = ip.address();
-const port = 3000;
 
 const appDomain = '';
 const cdnDomain = '';
 
 const projConf = require('./config');
+const port = projConf.devel.port;
 const appResourcePath = projConf.resourceVisitPath; // 【重要】静态资源访问地址
-const entryRoute = projConf.entryRoute;
-const pageEntryRecordFile = path.join(process.cwd(), 'build', projConf.pageEntryRecord);
+
+const cwd = process.cwd();
+const pageEntryRecordFile = path.join(cwd, 'build', projConf.pageEntryRecord);
 
 const { readData } = require('./helper');
+
+const allPages = fs.readdirSync(path.resolve(cwd, 'src/page'))
+    .filter(file => fs.lstatSync(path.resolve(cwd, 'src/page/' + file)).isDirectory());
+
+const router = require('./server.router');
 
 module.exports = {
     port: port,
@@ -26,9 +32,11 @@ module.exports = {
      */
     historyApiFallback: {
         rewrites: [
-            // 【示例】路由
-            { from: /^\/$/, to: '/resource/list.html' },
-            { from: /\/\d+/, to: '/resource/detail.html' }
+            ...(allPages.map(p => ({
+                from: new RegExp(`^\\/${p}$`),
+                to: `${appResourcePath}${p}.html`
+            }))),
+            ...(router(appResourcePath))
         ]
     },
 
@@ -40,9 +48,9 @@ module.exports = {
     },
     clientLogLevel: 'error',
     before(app) {
-        app.get(`/${entryRoute}`, function (req, res) {
+        app.get(`/`, function (req, res) {
             const pages = JSON.parse(fs.readFileSync(pageEntryRecordFile, 'utf8'));
-            res.send('<ul>' + pages.map(p => `<li><a href="${appResourcePath}${p}.html" target="_blank">${p}</a></li>`).join('') + '</ul>');
+            res.send('<ul>' + pages.map(p => `<li><a href="/${p}" target="_blank">${p}</a></li>`).join('') + '</ul>');
         });
 
         // 【示例】mock接口

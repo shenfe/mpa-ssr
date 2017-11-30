@@ -4,6 +4,8 @@
     "resourceOutputPath": "dist/resource",
     "vendorPath": "build/vendor",
     "pageEntryRecord": "page-entry.json",
-    "entryRoute": "entry",
-    "serviceWorker": false
+    "serviceWorker": false,
+    "devel": {
+        "port": 3000
+    }
 }

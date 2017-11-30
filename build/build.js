@@ -28,15 +28,15 @@ args.forEach(function (val, index, array) {
     }
 });
 
+const projConf = require('./config');
+
 const webpackConfigBuilder = require('./webpack.config.builder.js');
 
-const devServerPort = require('./server.config').port;
+const devServerPort = projConf.devel.port;
 
 const pages = inputPages.length ? inputPages : Object.keys(require('./helper.js').getPagesEntry());
 
 const open = require('open');
-
-const projConf = require('./config');
 
 console.log(pages);
 
@@ -49,9 +49,9 @@ let openOnce = false;
 
 if (options.buildTogether) {
     webpackConfigBuilder(pages, options, () => {
-        cp(path.resolve(cwd, 'dist/resource/service-worker.js'), path.resolve(cwd, 'dist/service-worker.js'));
+        fs.existsSync(path.resolve(cwd, 'dist/resource/service-worker.js')) && cp(path.resolve(cwd, 'dist/resource/service-worker.js'), path.resolve(cwd, 'dist/service-worker.js'));
         if (!openOnce) {
-            options.local && open(`http://127.0.0.1:${devServerPort}/${projConf.entryRoute}`);
+            options.local && open(`http://127.0.0.1:${devServerPort}`);
             openOnce = true;
         }
     });
