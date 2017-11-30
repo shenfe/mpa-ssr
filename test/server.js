@@ -42,10 +42,6 @@ const server = options.https ?
 
 const port = projConf.devel.port;
 
-server.listen(port, function () {
-    console.log('Listening on port %d', port);
-});
-
 app.use(express.static(path.resolve(cwd, 'dist')));
 
 devServerConfig.before(app);
@@ -54,6 +50,14 @@ for (let api in devServerConfig.proxy) {
     if (!devServerConfig.proxy.hasOwnProperty(api)) continue;
     app.use(api, proxy(devServerConfig.proxy[api]));
 }
+
+const rewriter = require('../build/util/http-rewrite-middleware');
+const router = require('../build/server.router');
+
+app.use(rewriter({
+    rewrites: router(),
+    verbose: true
+}));
 
 const pages = fs.readdirSync(path.resolve(cwd, 'dist/page')).map(p => p.replace(/\.[a-z]+$/, ''));
 
@@ -70,11 +74,8 @@ pages.forEach(p => {
     })
 });
 
-const history = require('connect-history-api-fallback');
-const router = require('../build/server.router');
-
-// app.use(history({
-//     rewrites: router()
-// }));
+server.listen(port, function () {
+    console.log('Listening on port %d', port);
+});
 
 open(`http://127.0.0.1:${port}`);

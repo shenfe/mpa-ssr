@@ -68,7 +68,8 @@ module.exports = {
     proxy: {
         // 【示例】代理接口
         '/api/**': {
-            target: 'https://other-server.example.com',
+            target: 'https://api.github.com/users/octocat/orgs',
+            pathRewrite: { '.*': '' },
             secure: false,
             changeOrigin: true
         }
