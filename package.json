@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "azzert": "^1.0.0",
-    "velocity-template-engine": "^1.0.0"
+    "velocity-template-engine": "^1.1.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.6",

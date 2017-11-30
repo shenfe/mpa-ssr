@@ -49,8 +49,7 @@ const htmlWebpackPluginCreator = (entries, { local }, publicPath) =>
                     resourceURL: publicPath,
                     vendorFiles: vendorFiles,
                     local: local,
-                    ssrData: te.context,
-                    serviceWorker: projConf.serviceWorker
+                    ssrData: te.context
                 }, templateParams));
             }
         })
@@ -59,22 +58,7 @@ const htmlWebpackPluginCreator = (entries, { local }, publicPath) =>
 const cssLoaders = sass => ([
     'style-loader',
     'css-loader',
-    {
-        loader: 'postcss-loader',
-        options: {
-            plugins: (loader) =>
-                [
-                    require('autoprefixer')(),
-                    require('postcss-px2rem')({
-                        remUnit: 75,
-                        baseDpr: 1,
-                        threeVersion: false,
-                        remVersion: true,
-                        remPrecision: 8
-                    })
-                ]
-        }
-    },
+    'postcss-loader',
     ...(sass ? ['sass-loader'] : [])
 ]);
 
@@ -92,7 +76,7 @@ module.exports = (specifiedEntries, options = {}) => {
     let extractCommonCss = new ExtractTextPlugin(`${pathPrefix}common/common.[contenthash:7].css`);
 
     return {
-        devtool: options.local ? 'cheap-module-eval-source-map' : 'nosources-source-map',
+        devtool: options.local ? 'cheap-module-eval-source-map' : 'cheap-module-source-map',
         target: 'web',
         devServer: options.local ? devServerConfig : undefined,
         context: path.resolve(cwd, 'src'),
@@ -106,13 +90,13 @@ module.exports = (specifiedEntries, options = {}) => {
         //     jquery: 'jQuery'
         // },
         resolveLoader: {
-            modules: [
+            modulesDirectories: [
                 path.resolve(cwd, 'build/webpack-loader'),
                 'node_modules'
             ]
         },
         resolve: {
-            modules: [
+            modulesDirectories: [
                 'node_modules',
                 path.resolve(cwd, 'src/static/lib')
             ],
@@ -134,14 +118,17 @@ module.exports = (specifiedEntries, options = {}) => {
             }
         },
         stats: isPro ? 'none' : 'verbose',
+        postcss: {
+            plugins: (loader) => [require('autoprefixer')()]
+        },
         module: {
-            rules: [
+            loaders: [
                 {
                     test: /index\.js[x]?$/,
                     include: [
                         path.resolve(cwd, './src/module')
                     ],
-                    use: [{
+                    loaders: [{
                         loader: 'index-loader',
                         options: {
                             local: options.local,
@@ -154,7 +141,7 @@ module.exports = (specifiedEntries, options = {}) => {
                     include: [
                         path.resolve(cwd, './src/page')
                     ],
-                    use: [{
+                    loaders: [{
                         loader: 'index-loader',
                         options: {
                             local: options.local,
@@ -167,11 +154,11 @@ module.exports = (specifiedEntries, options = {}) => {
                     exclude: [
                         path.resolve(cwd, './node_modules')
                     ],
-                    use: ['babel-loader']
+                    loaders: ['babel-loader']
                 },
                 {
                     test: /\.(jpg|png|gif)$/,
-                    use: [
+                    loaders: [
                         {
                             loader: 'url-loader',
                             options: {
@@ -182,11 +169,11 @@ module.exports = (specifiedEntries, options = {}) => {
                 },
                 {
                     test: /\.(woff|woff2)$/,
-                    use: ['url-loader']
+                    loaders: ['url-loader']
                 },
                 {
                     test: /\.(vm|html|ejs)$/,
-                    use: ['vm-loader']
+                    loaders: ['vm-loader']
                 },
                 {
                     test: /\.(css)$/,
@@ -194,7 +181,7 @@ module.exports = (specifiedEntries, options = {}) => {
                         path.resolve(cwd, 'src/module'),
                         path.resolve(cwd, 'src/page')
                     ],
-                    use: options.local ? cssLoaders() : extractPageCss.extract(extractTextOptions())
+                    loaders: options.local ? cssLoaders() : [extractPageCss.extract('style-loader', cssLoaders().slice(1))]
                 },
                 {
                     test: /\.(sass|scss)$/,
@@ -202,14 +189,14 @@ module.exports = (specifiedEntries, options = {}) => {
                         path.resolve(cwd, 'src/module'),
                         path.resolve(cwd, 'src/page')
                     ],
-                    use: options.local ? cssLoaders(true) : extractPageCss.extract(extractTextOptions(true))
+                    loaders: options.local ? cssLoaders(true) : [extractPageCss.extract('style-loader', cssLoaders(true).slice(1))]
                 },
                 {
                     test: /\.(css)$/,
                     include: [
                         path.resolve(cwd, 'src/static')
                     ],
-                    use: options.local ? cssLoaders() : extractCommonCss.extract(extractTextOptions())
+                    loaders: options.local ? cssLoaders() : [extractCommonCss.extract('style-loader', cssLoaders().slice(1))]
                 }
             ]
         },
@@ -244,20 +231,6 @@ module.exports = (specifiedEntries, options = {}) => {
             ]),
             ...(isPro ? [new OptimizeCssAssetsPlugin(), new Webpack.optimize.UglifyJsPlugin()] : []),
             ...htmlWebpackPluginCreator(entries, options, publicPath),
-            ...(projConf.serviceWorker ? [new SWPrecacheWebpackPlugin(
-                {
-                    cacheId: projConf.projName,
-                    dontCacheBustUrlsMatching: /.*/, // 重要
-                    minify: isPro,
-                    navigateFallback: publicPath,
-                    mergeStaticsConfig: true,
-                    stripPrefixMulti: {
-                        [`${projConf.resourceOutputPath}/`]: publicPath
-                    },
-                    staticFileGlobs: vendorFiles.map(file => `${projConf.resourceOutputPath}/${file}`),
-                    staticFileGlobsIgnorePatterns: [/\.html$/, /\.map$/, /asset-manifest\.json$/]
-                }
-            )] : []),
             function (compiler) {
                 this.plugin('done', function () {
                     options.done && options.done();
