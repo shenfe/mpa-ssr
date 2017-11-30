@@ -4,7 +4,7 @@ const path = require('path');
 const loaderUtils = require('loader-utils');
 
 module.exports = function (content) {
-    let query = loaderUtils.getOptions(this) || {};
+    let query = (loaderUtils.getOptions ? loaderUtils.getOptions(this) : loaderUtils.parseQuery(this.query)) || {};
     console.log(query);
     let injectTemplateRender = '';
     if (String(query.local) === 'true' && query.type === 'module') {
