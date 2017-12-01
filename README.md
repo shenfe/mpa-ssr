@@ -64,7 +64,6 @@ npm run tree -- -t
 npm run tree -- page_name
 ```
 
-
 ## 快速配置
 
 在`build/config.json`中，`resourceVisitPath`选项是静态资源的路径，在构建非本地环境时，修改为需要的路径，如`//res-domain.com/proj-res-dir/`。
