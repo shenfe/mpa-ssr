@@ -1,18 +1,19 @@
 # mpa-ssr
 
-Multi-page Application Server-side Rendering，多页面后端渲染。
+Multi-Page Application Server-Side Rendering，多页面后端渲染。
 
 ## 架构特性
 
-1. 多页面，后端控制路由，渲染页面数据直出，SEO友好
-1. 模板同构，前后端使用相同模板文件，前端无缝调试
-1. 支持模板文件碎片，更高的自由度和可复用性
-1. 支持PWA的Service Worker缓存
-1. 面向页面和组件开发，组件可自由构造、组合，主张局部架构按需提升
-1. 关注面分离，约束代码职责
-1. Webpack资源打包，代码切分，遵从文件名变当且仅当文件变的原则
-1. Webpack DevServer + 热替换，本地快速开发
-1. 移动端可基于px2rem方案做样式适配
+1. 多页面，后端直出数据渲染模板生成页面，SEO友好
+1. 模板同构，前后端使用相同模板，前端无缝开发调试
+1. 面向页面和组件开发，并支持碎片，（页面/组件/模板/样式表）自由构造组合，主张局部按需提升
+1. 关注面分离，代码文件路径体现代码职责
+1. 支持Px2rem + DPR方案做（移动端）样式适配
+1. 支持PWA的Service Worker用于浏览器缓存
+1. WebpackDevServer + HMR + Mock数据 + 接口代理 + 路由，本地快速开发
+1. Webpack资源打包，代码切分，静态资源文件遵从**文件名变当且仅当文件变**的原则，支持强缓存
+1. 默认配置Babel转译JS代码，默认配置Sass和Postcss处理CSS
+1. 默认面向移动端，可以兼容桌面端
 
 ## 项目结构
 
@@ -27,8 +28,9 @@ src/static | 公用静态文件
 dist | 发布文件
 mock | 开发测试数据
 build | 构建脚本
+test | 测试服务
 
-## 主要命令
+## 快速命令
 
 ### 构建并启动本地开发环境
 
@@ -41,6 +43,10 @@ npm run clean && npm run build:dll && npm run build:local
 ```bash
 npm run clean && npm run build:dll && npm run build && npm run serve
 ```
+
+## 快速配置
+
+在`build/config.json`中，`resourceVisitPath`选项是静态资源的路径，在构建非本地环境时，修改为需要的路径，如`//cdn-domain.com/res-dir/`。
 
 ## 构建
 
@@ -58,6 +64,12 @@ npm run build:dll
 npm run build
 ```
 
+如果只需要构建某一页面，则指定该页面：
+
+```bash
+npm run build -- page_name
+```
+
 ### 测试环境
 
 不压缩代码。建议环境：dev、test。
@@ -66,26 +78,53 @@ npm run build
 npm run build:devel
 ```
 
+如果只需要构建某一页面，则指定该页面。
+
 ### 本地开发环境
 
 结合mock数据，使用Webpack DevServer和热加载，本地开发调试。
 
 ```bash
-npm run build:local -- page_name
+npm run build:local
 ```
 
-## 本地服务
+如果只需要构建某一页面，则指定该页面。
 
-如果是本地开发环境，则默认使用Webpack DevServer。
+## 服务
 
-如果想预览测试或正式环境的效果，则在build之后执行：
+本地服务支持Mock接口、代理接口和路由，用于开发和测试。
+
+### 接口
+
+在`build/server.config.js`中，`before(app)`配置Mock接口，`proxy`配置代理接口。
+
+### Mock数据
+
+Mock数据可以额外定义在`mock`文件夹中。Mock数据分两种，页面直出数据、接口数据。
+
+对于页面直出数据，建议遵循`page-${page_name}.json`的命名规则。
+
+### 路由
+
+在`build/server.router.js`中配置路由。
+
+### 本地开发服务
+
+如果是本地开发环境，则默认使用Webpack DevServer，在构建命令执行时会自动启动。
+
+### 本地测试服务
+
+如果已经构建了测试或正式环境的代码，想要预览效果，则手动启动本地测试服务，即执行：
 
 ```
 npm run serve
 ```
 
+## 代码提示
 
-## 代码分离
+默认配置ESLint。
+
+## 代码切分
 
 存在分开打包需求的代码包括：
 
@@ -93,13 +132,13 @@ npm run serve
 1. 不依赖页面的公共逻辑
 1. 页面的业务逻辑
 
-对于第三方库，推荐使用externals和DllPlugin；使用DllPlugin需注意，在将dll包build完毕后再执行业务代码打包和DevServer。
+对于第三方库，使用externals和DllPlugin；使用DllPlugin需注意，在将dll包build完毕后再执行业务代码打包和DevServer。
 
-对于公共逻辑代码，推荐使用CommonsChunkPlugin。
+对于公共逻辑代码，使用CommonsChunkPlugin。
 
 ## 使用Service Worker
 
-Service Worker的使用是可选的。如果不需要，则：1) 在Webpack配置的插件中将SWPrecacheWebpackPlugin移除，2) 在snippet/head.html中将加载Service Worker的脚本标签移除。
+Service Worker的使用是可选的。如果不需要，则在`build/config.json`配置文件中将`serviceWorker`置为`false`。
 
 生产环境和测试环境下，建议在项目域根路经下代理`service-worker.js`文件和其他静态资源。
 
@@ -121,3 +160,19 @@ location /resource-dir/ {
 ```
 "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --unsafely-treat-insecure-origin-as-secure=https://app-domain.com,https://cdn-domain.com --user-data-dir="D:\foo" https://app-domain.com
 ```
+
+## 兼容桌面端
+
+*一般地，将桌面端俗称PC，将移动端俗称Wap或H5。*
+
+如果是PC端并且需要兼容IE8-，那么需要调整部分文件。需要调整的文件都在自身所在目录下存在另一个同名（但名称中多出`ie`标识）文件，进行替换即可。
+
+## 开发
+
+参照示例。
+
+由于面向页面和组件开发，开发代码主要涉及三个目录：
+
+1. `page`目录，每个页面一个文件夹
+1. `module`目录，每个模块（组件）一个文件夹
+1. `script`目录，公用脚本
