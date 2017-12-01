@@ -70,7 +70,7 @@ const templateExtract = (absFilePath, data, local) => {
     let tmpl = read(absFilePath);
 
     // 预处理，删除velocity模板中的注释
-    tmpl = tmpl.replace(/##[^\n\r]+/g, '');
+    tmpl = tmpl.replace(/(#\*[\s\S]*?\*#)|(##.*)/g, '');
 
     let deps = {};
     let findParseTmpls = matchReg(tmpl, /(?:#parseTmpl\(")([^()]*)(?:"\))/g)
