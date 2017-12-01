@@ -44,7 +44,7 @@ const port = projConf.devel.port;
 
 app.use(express.static(path.resolve(cwd, 'dist')));
 
-devServerConfig.before(app);
+(devServerConfig.before || devServerConfig.setup)(app);
 
 for (let api in devServerConfig.proxy) {
     if (!devServerConfig.proxy.hasOwnProperty(api)) continue;

@@ -49,7 +49,8 @@ const htmlWebpackPluginCreator = (entries, { local }, publicPath) =>
                     resourceURL: publicPath,
                     vendorFiles: vendorFiles,
                     local: local,
-                    ssrData: te.context
+                    ssrData: te.context,
+                    serviceWorker: projConf.serviceWorker
                 }, templateParams));
             }
         })
@@ -119,7 +120,7 @@ module.exports = (specifiedEntries, options = {}) => {
         },
         stats: isPro ? 'none' : 'verbose',
         postcss: {
-            plugins: (loader) => [require('autoprefixer')()]
+            plugins: (loader) => [require('autoprefixer')]
         },
         module: {
             loaders: [
@@ -219,6 +220,20 @@ module.exports = (specifiedEntries, options = {}) => {
             ]),
             ...(isPro ? [new OptimizeCssAssetsPlugin(), new Webpack.optimize.UglifyJsPlugin()] : []),
             ...htmlWebpackPluginCreator(entries, options, publicPath),
+            ...(projConf.serviceWorker ? [new SWPrecacheWebpackPlugin(
+                {
+                    cacheId: projConf.projName,
+                    dontCacheBustUrlsMatching: /.*/, // 重要
+                    minify: isPro,
+                    navigateFallback: publicPath,
+                    mergeStaticsConfig: true,
+                    stripPrefixMulti: {
+                        [`${projConf.resourceOutputPath}/`]: publicPath
+                    },
+                    staticFileGlobs: vendorFiles.map(file => `${projConf.resourceOutputPath}/${file}`),
+                    staticFileGlobsIgnorePatterns: [/\.html$/, /\.map$/, /asset-manifest\.json$/]
+                }
+            )] : []),
             function (compiler) {
                 this.plugin('done', function () {
                     options.done && options.done();
