@@ -30,21 +30,34 @@ mock | 开发测试数据
 build | 构建脚本
 test | 测试服务
 
-## 3 快速命令
+## 3 快速开发
 
-### 3.1 构建并启动本地开发环境
+由于面向页面和组件开发，开发代码主要涉及三个目录：
+
+1. `page`目录，每个页面一个文件夹
+  * 每个页面下，index.html为页面模板入口，index.js为页面逻辑入口
+1. `module`目录，每个模块（组件）一个文件夹
+  * 每个模块下，index.html为模块模板入口，index.js为模块逻辑入口（导出一个初始化函数）
+1. `script`目录，公用脚本
+  * 建议根据业务逻辑相关性作子目录区分，例如helper目录是业务逻辑相关的公用逻辑，util目录是业务逻辑无关的工具和辅助
+
+开发可参照src中示例。示例包含2个页面（列表页和详情页），共3个模块（头部模块、列表模块、详情模块）。
+
+## 4 快速命令
+
+### 4.1 构建并启动本地开发环境
 
 ```bash
 npm run clean && npm run build:dll && npm run build:local
 ```
 
-### 3.2 构建线上环境代码并在本地预览
+### 4.2 构建线上环境代码并在本地预览
 
 ```bash
 npm run clean && npm run build:dll && npm run build && npm run serve
 ```
 
-### 3.3 在终端树状打印页面和组件依赖
+### 4.3 在终端树状打印页面和组件依赖
 
 打印所有页面所有模块依赖：
 
@@ -64,19 +77,19 @@ npm run tree -- -t
 npm run tree -- page_name
 ```
 
-## 4 快速配置
+## 5 快速配置
 
 在`build/config.json`中，`resourceVisitPath`选项是静态资源的路径，在构建非本地环境时，修改为需要的路径，如`//res-domain.com/proj-res-dir/`。
 
-## 5 构建
+## 6 构建
 
-### 5.1 第三方库Dll打包
+### 6.1 第三方库Dll打包
 
 ```bash
 npm run build:dll
 ```
 
-### 5.2 生产环境
+### 6.2 生产环境
 
 建议环境：pre、prod。
 
@@ -90,7 +103,7 @@ npm run build
 npm run build -- page_name
 ```
 
-### 5.3 测试环境
+### 6.3 测试环境
 
 不压缩代码。建议环境：dev、test。
 
@@ -100,7 +113,7 @@ npm run build:devel
 
 如果只需要构建某一页面，则指定该页面。
 
-### 5.4 本地开发环境
+### 6.4 本地开发环境
 
 结合mock数据，使用Webpack DevServer和热加载，本地开发调试。
 
@@ -110,15 +123,15 @@ npm run build:local
 
 如果只需要构建某一页面，则指定该页面。
 
-## 6 服务
+## 7 服务
 
 本地服务支持Mock接口、代理接口和路由，用于开发和测试。本地服务分两种情况，本地开发模式下随Webpack启动的Webpack DevServer，本地测试模式下（构建了非本地环境的代码后想要本地预览和测试）手动启动的服务器。
 
-### 6.1 本地开发服务
+### 7.1 本地开发服务
 
 如果是本地开发环境，则默认使用Webpack DevServer，在构建命令执行时会自动启动。
 
-### 6.2 本地测试服务
+### 7.2 本地测试服务
 
 如果已经构建了测试或正式环境的代码，想要预览效果，则手动启动本地测试服务，即执行：
 
@@ -126,11 +139,11 @@ npm run build:local
 npm run serve
 ```
 
-### 6.3 接口
+### 7.3 接口
 
 在`build/server.config.js`中，`before(app)`配置Mock接口，`proxy`配置代理接口。
 
-### 6.4 Mock数据
+### 7.4 Mock数据
 
 Mock数据可以额外定义在`mock`文件夹中。Mock数据分两种，页面直出数据、接口数据。
 
@@ -141,15 +154,15 @@ Mock数据可以额外定义在`mock`文件夹中。Mock数据分两种，页面
 
 对于页面直出数据，建议遵循`page-${page_name}.json`的命名规则。
 
-### 6.5 路由
+### 7.5 路由
 
 在`build/server.router.js`中配置路由。
 
-## 7 代码提示
+## 8 代码提示
 
 默认配置ESLint。
 
-## 8 代码切分
+## 9 代码切分
 
 存在分开打包需求的代码包括：
 
@@ -161,7 +174,7 @@ Mock数据可以额外定义在`mock`文件夹中。Mock数据分两种，页面
 
 对于公共逻辑代码，使用CommonsChunkPlugin。
 
-## 9 使用Service Worker
+## 10 使用Service Worker
 
 Service Worker的使用是可选的。如果不需要，则在`build/config.json`配置文件中将`serviceWorker`置为`false`。
 
@@ -186,18 +199,8 @@ location /resource-dir/ {
 "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --unsafely-treat-insecure-origin-as-secure=https://app-domain.com,https://res-domain.com --user-data-dir="D:\foo" https://app-domain.com
 ```
 
-## 10 兼容桌面端
+## 11 兼容桌面端
 
 *一般地，将桌面端俗称PC，将移动端俗称Wap或H5。*
 
 如果是PC端并且需要兼容IE8-，那么需要调整部分文件。需要调整的文件都在自身所在目录下存在另一个同名（但名称中多出`ie`标识）文件，进行替换即可。
-
-## 11 开发
-
-参照示例。
-
-由于面向页面和组件开发，开发代码主要涉及三个目录：
-
-1. `page`目录，每个页面一个文件夹
-1. `module`目录，每个模块（组件）一个文件夹
-1. `script`目录，公用脚本
