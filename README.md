@@ -10,8 +10,8 @@ Multi-Page Application Server-Side Rendering，多页面后端渲染。
 1. 关注面分离，代码文件路径体现代码职责
 1. 支持Px2rem + DPR方案做（移动端）样式适配
 1. 支持PWA的Service Worker用于浏览器缓存
-1. WebpackDevServer + HMR + Mock数据 + 接口代理 + 路由，本地快速开发
 1. Webpack资源打包，代码切分，静态资源文件遵从**文件名变当且仅当文件变**的原则，支持强缓存
+1. WebpackDevServer + HMR + Mock数据 + 接口代理 + 路由，本地快速开发
 1. 默认配置Babel转译JS代码，默认配置Sass和Postcss处理CSS
 1. 默认面向移动端，可以兼容桌面端
 
@@ -46,7 +46,7 @@ npm run clean && npm run build:dll && npm run build && npm run serve
 
 ## 快速配置
 
-在`build/config.json`中，`resourceVisitPath`选项是静态资源的路径，在构建非本地环境时，修改为需要的路径，如`//cdn-domain.com/res-dir/`。
+在`build/config.json`中，`resourceVisitPath`选项是静态资源的路径，在构建非本地环境时，修改为需要的路径，如`//res-domain.com/proj-res-dir/`。
 
 ## 构建
 
@@ -92,21 +92,7 @@ npm run build:local
 
 ## 服务
 
-本地服务支持Mock接口、代理接口和路由，用于开发和测试。
-
-### 接口
-
-在`build/server.config.js`中，`before(app)`配置Mock接口，`proxy`配置代理接口。
-
-### Mock数据
-
-Mock数据可以额外定义在`mock`文件夹中。Mock数据分两种，页面直出数据、接口数据。
-
-对于页面直出数据，建议遵循`page-${page_name}.json`的命名规则。
-
-### 路由
-
-在`build/server.router.js`中配置路由。
+本地服务支持Mock接口、代理接口和路由，用于开发和测试。本地服务分两种情况，本地开发模式下随Webpack启动的Webpack DevServer，本地测试模式下（构建了非本地环境的代码后想要本地预览和测试）手动启动的服务器。
 
 ### 本地开发服务
 
@@ -120,6 +106,25 @@ Mock数据可以额外定义在`mock`文件夹中。Mock数据分两种，页面
 npm run serve
 ```
 
+### 接口
+
+在`build/server.config.js`中，`before(app)`配置Mock接口，`proxy`配置代理接口。
+
+### Mock数据
+
+Mock数据可以额外定义在`mock`文件夹中。Mock数据分两种，页面直出数据、接口数据。
+
+页面直出数据在两个时候被使用：
+
+1. 本地开发模式下，在Webpack编译时，html-webpack-plugin插件将页面模板与页面Mock数据合成html
+2. 本地测试模式下，服务器对每个页面名称提供对应接口，返回页面模板与页面Mock数据合成的html
+
+对于页面直出数据，建议遵循`page-${page_name}.json`的命名规则。
+
+### 路由
+
+在`build/server.router.js`中配置路由。
+
 ## 代码提示
 
 默认配置ESLint。
@@ -129,8 +134,8 @@ npm run serve
 存在分开打包需求的代码包括：
 
 1. 第三方库
-1. 不依赖页面的公共逻辑
-1. 页面的业务逻辑
+1. 跨页面的公共逻辑
+1. 页面内的业务逻辑
 
 对于第三方库，使用externals和DllPlugin；使用DllPlugin需注意，在将dll包build完毕后再执行业务代码打包和DevServer。
 
@@ -158,7 +163,7 @@ location /resource-dir/ {
 测试环境如果SSL证书不受信，可以命令行带参数打开Chrome，让Chrome信任项目源和cdn源：
 
 ```
-"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --unsafely-treat-insecure-origin-as-secure=https://app-domain.com,https://cdn-domain.com --user-data-dir="D:\foo" https://app-domain.com
+"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --unsafely-treat-insecure-origin-as-secure=https://app-domain.com,https://res-domain.com --user-data-dir="D:\foo" https://app-domain.com
 ```
 
 ## 兼容桌面端
