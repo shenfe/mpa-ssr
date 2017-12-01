@@ -79,7 +79,7 @@ npm run tree -- page_name
 
 ## 5 快速配置
 
-在`build/config.json`中，`resourceVisitPath`选项是静态资源的路径，在构建非本地环境时，修改为需要的路径，如`//res-domain.com/proj-res-dir/`。
+在`build/config.json`中，`resourceVisitPath`选项是静态资源的路径，在构建非本地环境时，修改为需要的路径，如`//res-domain.com/res-dir/`。
 
 ## 6 构建
 
@@ -182,16 +182,16 @@ Service Worker的使用是可选的。如果不需要，则在`build/config.json
 
 ```
 location /service-worker.js {
-    proxy_pass http://cdn-domain.com/resource-dir/service-worker.js;
+    proxy_pass http://res-domain.com/res-dir/service-worker.js;
     break;
 }
 location /resource-dir/ {
-    proxy_pass http://cdn-domain.com/resource-dir/;
+    proxy_pass http://res-domain.com/res-dir/;
     break;
 }
 ```
 
-当然，最好再在请求响应头里加上缓存相关的头。只要秉持“文件名变当且仅当文件变”的打包原则，缓存过期时间可以设置足够久。如果允许的话，还可以给项目域的resource-dir路径配置cdn缓存，并且足够久。
+当然，最好再在请求响应头里加上缓存相关的头。只要秉持“文件名变当且仅当文件变”的打包原则，缓存过期时间可以设置足够久。如果允许的话，还可以给项目域的res-dir路径配置cdn缓存，并且足够久。
 
 测试环境如果SSL证书不受信，可以命令行带参数打开Chrome，让Chrome信任项目源和cdn源：
 
