@@ -31,6 +31,10 @@ const srcPath = path.resolve(cwd, 'src');
 
 const dependencyExtract = absFilePath => {
     let tmpl = readFile(absFilePath);
+
+    // 预处理，删除velocity模板中的注释
+    tmpl = tmpl.replace(/(#\*[\s\S]*?\*#)|(##.*)/g, '');
+
     let deps = {};
 
     let findDeps = matchReg(tmpl, /(?:#parse(Tmpl|Module)\(")([^()]+)(?:"\))/g);
