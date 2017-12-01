@@ -68,6 +68,10 @@ const getPagesEntry = (specifiedPages, options = {}, devServer) => {
 
 const templateExtract = (absFilePath, data, local) => {
     let tmpl = read(absFilePath);
+
+    // 预处理，删除velocity模板中的注释
+    tmpl = tmpl.replace(/##[^\n\r]+/g, '');
+
     let deps = {};
     let findParseTmpls = matchReg(tmpl, /(?:#parseTmpl\(")([^()]*)(?:"\))/g)
         .concat(matchReg(tmpl, /(?:#parseTmpl\(')([^()]*)(?:'\))/g));
