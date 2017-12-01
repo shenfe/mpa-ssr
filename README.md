@@ -44,6 +44,27 @@ npm run clean && npm run build:dll && npm run build:local
 npm run clean && npm run build:dll && npm run build && npm run serve
 ```
 
+### 在终端树状打印页面和组件依赖
+
+打印所有页面所有模块依赖：
+
+```bash
+npm run tree
+```
+
+默认只打印页面和模块，如果需要显示到模板的粒度，加`-t`选项：
+
+```bash
+npm run tree -- -t
+```
+
+如果只需查看特定页面，加页面名：
+
+```bash
+npm run tree -- page_name
+```
+
+
 ## 快速配置
 
 在`build/config.json`中，`resourceVisitPath`选项是静态资源的路径，在构建非本地环境时，修改为需要的路径，如`//res-domain.com/proj-res-dir/`。

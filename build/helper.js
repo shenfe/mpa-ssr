@@ -62,7 +62,7 @@ const getPagesEntry = (specifiedPages, options = {}, devServer) => {
         return prev;
     }, {});
 
-    console.log(ps);
+    // console.log(ps);
     return ps;
 };
 
