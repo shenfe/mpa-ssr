@@ -96,16 +96,57 @@ npm run clean && npm run build:dll && npm run build && npm run serve
 npm run tree
 ```
 
+例如对于示例，输出：
+
+```
+  ├─ [page] detail
+  │  ├─ [module] header
+  │  └─ [module] detail
+  └─ [page] list
+     ├─ [module] header
+     └─ [module] list
+```
+
 默认只打印页面和模块，如果需要显示到模板的粒度，加`-t`选项：
 
 ```bash
 npm run tree -- -t
 ```
 
+例如对于示例，输出：
+
+```
+├─ [page] detail
+│  ├─ snippet/head.html
+│  │  ├─ snippet/meta.html
+│  │  └─ snippet/css.ejs
+│  ├─ [module] header
+│  ├─ [module] detail
+│  │  └─ module/list/item.html
+│  └─ snippet/js.ejs
+└─ [page] list
+   ├─ snippet/head.html
+   │  ├─ snippet/meta.html
+   │  └─ snippet/css.ejs
+   ├─ [module] header
+   ├─ [module] list
+   │  └─ module/list/list.html
+   │     └─ module/list/item.html
+   └─ snippet/js.ejs
+```
+
 如果只需查看特定页面，加页面名：
 
 ```bash
 npm run tree -- page_name
+```
+
+例如对于示例中的list页面，输出：
+
+```
+└─ [page] list
+   ├─ [module] header
+   └─ [module] list
 ```
 
 ## 5 快速配置
