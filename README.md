@@ -240,7 +240,7 @@ Mock数据可以额外定义在`mock`文件夹中。Mock数据分两种，页面
 : No such file or directory 2: ./node_modules/pre-commit/hook
 ```
 
-
+则尝试换用终端，如Windows下可使用git bash。
 
 ## 9 代码切分
 
