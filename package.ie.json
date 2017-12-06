@@ -1,5 +1,7 @@
 {
     "scripts": {
+        "eslint": "eslint -c ./.eslintrc src",
+        "stylelint": "stylelint \"src/**/*css\"",
         "serve": "node ./test/server.js",
         "clean": "node ./build/clean.js",
         "copy": "node ./build/copy.js",
@@ -46,6 +48,8 @@
         "shelljs": "^0.7.8",
         "shx": "^0.2.2",
         "style-loader": "^0.18.2",
+        "stylelint": "^8.3.1",
+        "stylelint-config-standard": "^18.0.0",
         "sw-precache-webpack-plugin": "^0.11.4",
         "treeify": "^1.0.1",
         "uglifyjs-webpack-plugin": "^0.4.6",
@@ -54,5 +58,9 @@
         "webpack-bundle-analyzer": "^2.9.0",
         "webpack-dev-server": "^1.15.0",
         "webpack-md5-hash": "0.0.5"
-    }
+    },
+    "pre-commit": [
+        "eslint",
+        "stylelint"
+    ]
 }

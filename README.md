@@ -3,29 +3,29 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [mpa-ssr](#mpa-ssr)
-  - [1 架构特性](#1-%E6%9E%B6%E6%9E%84%E7%89%B9%E6%80%A7)
-  - [2 项目结构](#2-%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84)
-  - [3 快速开发](#3-%E5%BF%AB%E9%80%9F%E5%BC%80%E5%8F%91)
-  - [4 快速命令](#4-%E5%BF%AB%E9%80%9F%E5%91%BD%E4%BB%A4)
-    - [4.1 构建并启动本地开发环境](#41-%E6%9E%84%E5%BB%BA%E5%B9%B6%E5%90%AF%E5%8A%A8%E6%9C%AC%E5%9C%B0%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83)
-    - [4.2 构建线上环境代码并在本地预览](#42-%E6%9E%84%E5%BB%BA%E7%BA%BF%E4%B8%8A%E7%8E%AF%E5%A2%83%E4%BB%A3%E7%A0%81%E5%B9%B6%E5%9C%A8%E6%9C%AC%E5%9C%B0%E9%A2%84%E8%A7%88)
-    - [4.3 在终端树状打印页面和组件依赖](#43-%E5%9C%A8%E7%BB%88%E7%AB%AF%E6%A0%91%E7%8A%B6%E6%89%93%E5%8D%B0%E9%A1%B5%E9%9D%A2%E5%92%8C%E7%BB%84%E4%BB%B6%E4%BE%9D%E8%B5%96)
-  - [5 快速配置](#5-%E5%BF%AB%E9%80%9F%E9%85%8D%E7%BD%AE)
-  - [6 构建](#6-%E6%9E%84%E5%BB%BA)
-    - [6.1 第三方库Dll打包](#61-%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93dll%E6%89%93%E5%8C%85)
-    - [6.2 生产环境](#62-%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83)
-    - [6.3 测试环境](#63-%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83)
-    - [6.4 本地开发环境](#64-%E6%9C%AC%E5%9C%B0%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83)
-  - [7 服务](#7-%E6%9C%8D%E5%8A%A1)
-    - [7.1 本地开发服务](#71-%E6%9C%AC%E5%9C%B0%E5%BC%80%E5%8F%91%E6%9C%8D%E5%8A%A1)
-    - [7.2 本地测试服务](#72-%E6%9C%AC%E5%9C%B0%E6%B5%8B%E8%AF%95%E6%9C%8D%E5%8A%A1)
-    - [7.3 接口](#73-%E6%8E%A5%E5%8F%A3)
-    - [7.4 Mock数据](#74-mock%E6%95%B0%E6%8D%AE)
-    - [7.5 路由](#75-%E8%B7%AF%E7%94%B1)
-  - [8 代码提示](#8-%E4%BB%A3%E7%A0%81%E6%8F%90%E7%A4%BA)
-  - [9 代码切分](#9-%E4%BB%A3%E7%A0%81%E5%88%87%E5%88%86)
-  - [10 使用Service Worker](#10-%E4%BD%BF%E7%94%A8service-worker)
-  - [11 兼容桌面端](#11-%E5%85%BC%E5%AE%B9%E6%A1%8C%E9%9D%A2%E7%AB%AF)
+    - [1 架构特性](#1-%E6%9E%B6%E6%9E%84%E7%89%B9%E6%80%A7)
+    - [2 项目结构](#2-%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84)
+    - [3 快速开发](#3-%E5%BF%AB%E9%80%9F%E5%BC%80%E5%8F%91)
+    - [4 快速命令](#4-%E5%BF%AB%E9%80%9F%E5%91%BD%E4%BB%A4)
+        - [4.1 构建并启动本地开发环境](#41-%E6%9E%84%E5%BB%BA%E5%B9%B6%E5%90%AF%E5%8A%A8%E6%9C%AC%E5%9C%B0%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83)
+        - [4.2 构建线上环境代码并在本地预览](#42-%E6%9E%84%E5%BB%BA%E7%BA%BF%E4%B8%8A%E7%8E%AF%E5%A2%83%E4%BB%A3%E7%A0%81%E5%B9%B6%E5%9C%A8%E6%9C%AC%E5%9C%B0%E9%A2%84%E8%A7%88)
+        - [4.3 在终端树状打印页面和组件依赖](#43-%E5%9C%A8%E7%BB%88%E7%AB%AF%E6%A0%91%E7%8A%B6%E6%89%93%E5%8D%B0%E9%A1%B5%E9%9D%A2%E5%92%8C%E7%BB%84%E4%BB%B6%E4%BE%9D%E8%B5%96)
+    - [5 快速配置](#5-%E5%BF%AB%E9%80%9F%E9%85%8D%E7%BD%AE)
+    - [6 构建](#6-%E6%9E%84%E5%BB%BA)
+        - [6.1 第三方库Dll打包](#61-%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93dll%E6%89%93%E5%8C%85)
+        - [6.2 生产环境](#62-%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83)
+        - [6.3 测试环境](#63-%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83)
+        - [6.4 本地开发环境](#64-%E6%9C%AC%E5%9C%B0%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83)
+    - [7 服务](#7-%E6%9C%8D%E5%8A%A1)
+        - [7.1 本地开发服务](#71-%E6%9C%AC%E5%9C%B0%E5%BC%80%E5%8F%91%E6%9C%8D%E5%8A%A1)
+        - [7.2 本地测试服务](#72-%E6%9C%AC%E5%9C%B0%E6%B5%8B%E8%AF%95%E6%9C%8D%E5%8A%A1)
+        - [7.3 接口](#73-%E6%8E%A5%E5%8F%A3)
+        - [7.4 Mock数据](#74-mock%E6%95%B0%E6%8D%AE)
+        - [7.5 路由](#75-%E8%B7%AF%E7%94%B1)
+    - [8 代码提示](#8-%E4%BB%A3%E7%A0%81%E6%8F%90%E7%A4%BA)
+    - [9 代码切分](#9-%E4%BB%A3%E7%A0%81%E5%88%87%E5%88%86)
+    - [10 使用Service Worker](#10-%E4%BD%BF%E7%94%A8service-worker)
+    - [11 兼容桌面端](#11-%E5%85%BC%E5%AE%B9%E6%A1%8C%E9%9D%A2%E7%AB%AF)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -232,7 +232,15 @@ Mock数据可以额外定义在`mock`文件夹中。Mock数据分两种，页面
 
 ## 8 代码提示
 
-默认配置ESLint。
+默认配置ESLint和StyleLint，并且配置pre-commit。
+
+如果git commit时报以下错：
+
+```
+: No such file or directory 2: ./node_modules/pre-commit/hook
+```
+
+则删除.git/hooks/pre-commit文件再试。
 
 ## 9 代码切分
 
