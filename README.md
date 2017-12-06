@@ -232,7 +232,7 @@ Mock数据可以额外定义在`mock`文件夹中。Mock数据分两种，页面
 
 ## 8 代码提示
 
-默认配置ESLint和StyleLint，并且配置pre-commit。
+默认配置ESLint和StyleLint进行代码检查验证，并且为git配置pre-commit的hook。
 
 如果git commit时报以下错：
 
@@ -241,6 +241,8 @@ Mock数据可以额外定义在`mock`文件夹中。Mock数据分两种，页面
 ```
 
 则尝试换用终端，如Windows下可使用git bash。
+
+如果git commit时不想进行验证，则在命令后加`--no-verify`选项。
 
 ## 9 代码切分
 
