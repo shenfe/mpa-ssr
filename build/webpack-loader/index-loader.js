@@ -6,13 +6,13 @@ const loaderUtils = require('loader-utils');
 module.exports = function (content) {
     let query = (loaderUtils.getOptions ? loaderUtils.getOptions(this) : loaderUtils.parseQuery(this.query)) || {};
     console.log(query);
-    let injectTemplateRender = '';
-    if (String(query.local) === 'true' && query.type === 'module') {
-        injectTemplateRender = `(function () {
-            let placeholder = document.getElementById('placeholder-${path.basename(path.dirname(this.resourcePath))}');
+
+    if (String(query.local) === 'true' && query.type === 'module' && fs.existsSync(this.resourcePath.replace(/\.js$/, '.html'))) {
+        let injectTemplateRender = `(function () {
+            let placeholder = window.document.getElementById('placeholder-${path.basename(path.dirname(this.resourcePath))}');
             if (!placeholder) return;
-            let data = JSON.parse(document.getElementById('here-is-ssr-data').value);
-            placeholder.parentNode.innerHTML = window.VTE.render(require('./index.html'), data);
+            let data = JSON.parse(window.document.getElementById('here-is-ssr-data').value);
+            placeholder.parentNode.innerHTML = require('velocity-template-engine').render(require('./index.html'), data);
         })();
         if (module.hot) {
             module.hot.accept('./index.html', function () {
@@ -20,8 +20,9 @@ module.exports = function (content) {
             });
         }
         `;
+        this.addDependency('./index.html');
+        content = injectTemplateRender + content + `;require('./index.html');`;
     }
-    this.addDependency('./index.html');
 
     if (fs.existsSync(this.resourcePath.replace(/\.js$/, '.css'))) {
         this.addDependency('./index.css');
@@ -34,7 +35,7 @@ module.exports = function (content) {
         content = `require('./index.sass');${content}`;
     }
 
-    console.log(`${this.resourcePath} has been injected with css.`);
+    console.log(`${this.resourcePath} has been injected.`);
 
-    return injectTemplateRender + content + `;require('./index.html');`;
+    return content;
 };
