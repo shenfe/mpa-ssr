@@ -95,7 +95,7 @@ const templateExtract = (absFilePath, data, local) => {
         });
         tmpl = tmpl.replaceAll(
             p[0],
-            `<div module="${p[1]}">` + (local ? `<div id="placeholder-${p[1]}"></div>` : t.output) + `</div>`
+            `<div module="${p[1]}" style="width:100%;height:100%;">` + (local ? `<div id="placeholder-${p[1]}"></div>` : t.output) + `</div>`
         );
     });
 
