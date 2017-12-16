@@ -7,8 +7,9 @@ module.exports = function (content) {
     let query = (loaderUtils.getOptions ? loaderUtils.getOptions(this) : loaderUtils.parseQuery(this.query)) || {};
     console.log(query);
 
+    let injectTemplateRender = '';
     if (String(query.local) === 'true' && query.type === 'module' && fs.existsSync(this.resourcePath.replace(/\.js$/, '.html'))) {
-        let injectTemplateRender = `(function () {
+        injectTemplateRender = `(function () {
             let placeholder = window.document.getElementById('placeholder-${path.basename(path.dirname(this.resourcePath))}');
             if (!placeholder) return;
             let data = JSON.parse(window.document.getElementById('here-is-ssr-data').value);
@@ -20,6 +21,8 @@ module.exports = function (content) {
             });
         }
         `;
+    }
+    if (fs.existsSync(this.resourcePath.replace(/\.js$/, '.html'))) {
         this.addDependency('./index.html');
         content = injectTemplateRender + content + `;require('./index.html');`;
     }
