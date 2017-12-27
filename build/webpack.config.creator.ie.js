@@ -218,7 +218,22 @@ module.exports = (specifiedEntries, options = {}) => {
                 extractCommonCss,
                 extractPageCss
             ]),
-            ...(isPro ? [new OptimizeCssAssetsPlugin(), new Webpack.optimize.UglifyJsPlugin()] : []),
+            ...(isPro ? [new OptimizeCssAssetsPlugin(), new Webpack.optimize.UglifyJsPlugin({
+                mangle: {
+                    screw_ie8: false
+                },
+                mangleProperties: {
+                    screw_ie8: false,
+                    ignore_quoted: true
+                },
+                compress: {
+                    screw_ie8: false,
+                    properties: false
+                },
+                output: {
+                    screw_ie8: false
+                }
+            })] : []),
             ...htmlWebpackPluginCreator(entries, options, publicPath),
             ...(projConf.serviceWorker ? [new SWPrecacheWebpackPlugin(
                 {
