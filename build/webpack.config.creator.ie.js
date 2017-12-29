@@ -92,9 +92,13 @@ module.exports = (specifiedEntries, options = {}) => {
         // },
         resolveLoader: {
             modulesDirectories: [
-                path.resolve(cwd, 'build/webpack-loader'),
+                'build/webpack-loader',
                 'node_modules'
-            ]
+            ],
+            alias: {
+                index: path.resolve(cwd, 'build/webpack-loader/index-loader.js'),
+                vm: path.resolve(cwd, 'build/webpack-loader/vm-loader.js')
+            }
         },
         resolve: {
             modulesDirectories: [
@@ -147,14 +151,7 @@ module.exports = (specifiedEntries, options = {}) => {
                 },
                 {
                     test: /\.(jpg|png|gif)$/,
-                    loaders: [
-                        {
-                            loader: 'url-loader',
-                            options: {
-                                limit: 8192
-                            }
-                        }
-                    ]
+                    loaders: ['url-loader?limit=8192']
                 },
                 {
                     test: /\.(woff|woff2)$/,
