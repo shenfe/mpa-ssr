@@ -167,7 +167,8 @@ module.exports = (specifiedEntries, options = {}) => {
                         path.resolve(cwd, 'src/module'),
                         path.resolve(cwd, 'src/page')
                     ],
-                    loaders: options.local ? cssLoaders() : [extractPageCss.extract('style-loader', cssLoaders().slice(1))]
+                    loaders: options.local ? cssLoaders() : undefined,
+                    loader: options.local ? undefined : extractPageCss.extract('style-loader', cssLoaders().slice(1)) /* fixing ExtractTextPlugin loader problem */
                 },
                 {
                     test: /\.(sass|scss)$/,
@@ -175,14 +176,16 @@ module.exports = (specifiedEntries, options = {}) => {
                         path.resolve(cwd, 'src/module'),
                         path.resolve(cwd, 'src/page')
                     ],
-                    loaders: options.local ? cssLoaders(true) : [extractPageCss.extract('style-loader', cssLoaders(true).slice(1))]
+                    loaders: options.local ? cssLoaders(true) : undefined,
+                    loader: options.local ? undefined : extractPageCss.extract('style-loader', cssLoaders(true).slice(1)) /* fixing ExtractTextPlugin loader problem */
                 },
                 {
                     test: /\.(css)$/,
                     include: [
                         path.resolve(cwd, 'src/static')
                     ],
-                    loaders: options.local ? cssLoaders() : [extractCommonCss.extract('style-loader', cssLoaders().slice(1))]
+                    loaders: options.local ? cssLoaders() : undefined,
+                    loader: options.local ? undefined : extractPageCss.extract('style-loader', cssLoaders().slice(1)) /* fixing ExtractTextPlugin loader problem */
                 }
             ]
         },
