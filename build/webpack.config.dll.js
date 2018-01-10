@@ -31,6 +31,21 @@ module.exports = {
             path: path.resolve(cwd, 'build/[name]-manifest.json'), // [name]为entry名
             name: dllGlobalLibName
         }),
-        ...(!debug ? [new Webpack.optimize.UglifyJsPlugin()] : [])
+        ...(!debug ? [new Webpack.optimize.UglifyJsPlugin({
+            mangle: {
+                screw_ie8: false
+            },
+            mangleProperties: {
+                screw_ie8: false,
+                ignore_quoted: true
+            },
+            compress: {
+                screw_ie8: false,
+                properties: false
+            },
+            output: {
+                screw_ie8: false
+            }
+        })] : [])
     ]
 };
