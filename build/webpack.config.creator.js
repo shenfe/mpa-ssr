@@ -242,7 +242,11 @@ module.exports = (specifiedEntries, options = {}) => {
                 extractCommonCss,
                 extractPageCss
             ]),
-            ...(isPro ? [new OptimizeCssAssetsPlugin(), new Webpack.optimize.UglifyJsPlugin()] : []),
+            ...(isPro ? [new OptimizeCssAssetsPlugin({
+                cssProcessorOptions: {
+                    zindex: false
+                }
+            }), new Webpack.optimize.UglifyJsPlugin()] : []),
             ...htmlWebpackPluginCreator(entries, options, publicPath),
             ...(projConf.serviceWorker ? [new SWPrecacheWebpackPlugin(
                 {
