@@ -218,7 +218,11 @@ module.exports = (specifiedEntries, options = {}) => {
                 extractCommonCss,
                 extractPageCss
             ]),
-            ...(isPro ? [new OptimizeCssAssetsPlugin(), new Webpack.optimize.UglifyJsPlugin({
+            ...(isPro ? [new OptimizeCssAssetsPlugin({
+                cssProcessorOptions: {
+                    zindex: false
+                }
+            }), new Webpack.optimize.UglifyJsPlugin({
                 mangle: {
                     screw_ie8: false
                 },
