@@ -24,7 +24,7 @@ module.exports = function (content) {
     }
     if (fs.existsSync(this.resourcePath.replace(/\.js$/, '.html'))) {
         this.addDependency('./index.html');
-        content = injectTemplateRender + content + `;require('./index.html');`;
+        content = injectTemplateRender + content + `;require('!!vm-loader?+inner!./index.html');`;
     }
 
     if (String(query.local) === 'true' && query.type === 'page') {

@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
+const loaderUtils = require('loader-utils');
+
 const { templateExtract } = require('../helper.js');
 
 const styleModuleOfFile = p => {
@@ -17,6 +19,9 @@ const styleModuleOfFile = p => {
 };
 
 module.exports = function (content) {
+    let query = (loaderUtils.getOptions ? loaderUtils.getOptions(this) : loaderUtils.parseQuery(this.query)) || {};
+    console.log(query);
+
     this.cacheable && this.cacheable();
     this.value = content;
     console.log(`"${this.resourcePath}" loaded`);
@@ -62,6 +67,6 @@ module.exports = function (content) {
                 location.reload();
             });
         };
-        module.exports=${JSON.stringify(content.output)};
+        module.exports=${query.inner ? '""' : JSON.stringify(content.output)};
     `;
 };
