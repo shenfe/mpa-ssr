@@ -27,6 +27,22 @@ module.exports = function (content) {
         content = injectTemplateRender + content + `;require('./index.html');`;
     }
 
+    if (String(query.local) === 'true' && query.type === 'page') {
+        let pageName = (this.resourcePath.replace(/(\\)+/g, '/').match(/(?:.*?)\/([0-9a-zA-Z$_-]+)\/[0-9a-zA-Z$_-]+\.js/) || [])[1];
+        let pageMock = path.resolve(process.cwd(), `./mock/page-${pageName}.json`);
+        if (fs.existsSync(pageMock)) {
+            this.addDependency(pageMock);
+            pageMock = path.relative(path.dirname(this.resourcePath), pageMock).replace(/(\\)+/g, '/');
+            console.log(`${pageMock} listened`);
+            content = `if (module.hot) {
+                module.hot.accept('${pageMock}', function () {
+                    console.log('${pageMock} changes');
+                    location.reload();
+                });
+            };${content};`;
+        }
+    }
+
     if (fs.existsSync(this.resourcePath.replace(/\.js$/, '.css'))) {
         this.addDependency('./index.css');
         content = `require('./index.css');${content}`;

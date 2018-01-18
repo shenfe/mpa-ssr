@@ -6,6 +6,6 @@
     "pageEntryRecord": "page-entry.json",
     "serviceWorker": false,
     "devel": {
-        "port": 3000
+        "port": 3002
     }
 }

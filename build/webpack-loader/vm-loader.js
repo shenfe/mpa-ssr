@@ -3,33 +3,47 @@ const path = require('path');
 
 const { templateExtract } = require('../helper.js');
 
+const styleModuleOfFile = p => {
+    let fileName = path.basename(p).replace(/\.[a-z]+$/, '');
+    let fileStyleType;
+    if (fs.existsSync(p.replace(/\.[a-z]+$/, '.css'))) {
+        fileStyleType = 'css';
+    } else if (fs.existsSync(p.replace(/\.[a-z]+$/, '.scss'))) {
+        fileStyleType = 'scss';
+    } else if (fs.existsSync(p.replace(/\.[a-z]+$/, '.sass'))) {
+        fileStyleType = 'sass';
+    }
+    if (fileStyleType) return `${fileName}.${fileStyleType}`;
+};
+
 module.exports = function (content) {
     this.cacheable && this.cacheable();
     this.value = content;
     console.log(`"${this.resourcePath}" loaded`);
     content = templateExtract(this.resourcePath);
-    content.require = content.require.map(r => ('./' + path.relative(path.dirname(this.resourcePath), r).replace(/\\/g, '/')));
-    console.log('it requires: ', content.require);
+    console.log(`it requires `, content.require);
+
+    let relativePath = r => ('./' + path.relative(path.dirname(this.resourcePath), r).replace(/\\/g, '/'));
+
+    let relativeRequires = content.require.map(relativePath);
+
+    let requires = [];
 
     let _this = this;
     content.require.forEach(function (r) {
         _this.addDependency(r);
+        let styleFile = styleModuleOfFile(r);
+        if (styleFile) {
+            _this.addDependency(path.dirname(r) + '/' + styleFile);
+            let p = relativePath(r);
+            requires.push(`require('${path.dirname(p) + '/' + styleFile}')`);
+        }
     });
 
-    let requires = content.require.map(r => `require('${r}')`);
-
-    let fileName = path.basename(this.resourcePath).replace(/\.[a-z]+$/, '');
-    let fileStyleType;
-    if (fs.existsSync(this.resourcePath.replace(/\.[a-z]+$/, '.css'))) {
-        fileStyleType = 'css';
-    } else if (fs.existsSync(this.resourcePath.replace(/\.[a-z]+$/, '.scss'))) {
-        fileStyleType = 'scss';
-    } else if (fs.existsSync(this.resourcePath.replace(/\.[a-z]+$/, '.sass'))) {
-        fileStyleType = 'sass';
-    }
-    if (fileStyleType) {
-        this.addDependency(`./${fileName}.${fileStyleType}`);
-        requires.push(`require('./${fileName}.${fileStyleType}')`);
+    let styleFile = styleModuleOfFile(this.resourcePath);
+    if (styleFile) {
+        this.addDependency(`./${styleFile}`);
+        requires.push(`require('./${styleFile}')`);
     }
 
     return `
@@ -42,7 +56,7 @@ module.exports = function (content) {
                 location.reload();
             });
             */
-            module.hot.accept(${JSON.stringify(content.require)}, function () {
+            module.hot.accept(${JSON.stringify(relativeRequires)}, function () {
                 // callback
                 console.log('sub template updated');
                 location.reload();
