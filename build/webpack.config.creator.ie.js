@@ -129,6 +129,10 @@ module.exports = (specifiedEntries, options = {}) => {
         module: {
             loaders: [
                 {
+                    test: /\.json$/,
+                    loader: 'json-loader'
+                },
+                {
                     test: /index\.js[x]?$/,
                     include: [
                         path.resolve(cwd, './src/module')
