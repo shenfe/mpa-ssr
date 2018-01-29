@@ -80,7 +80,7 @@ const templateExtract = (absFilePath, data, local) => {
     findParseTmpls.forEach(p => {
         let dep = (p[1].charAt(0) === '/') ? path.resolve(cwd, 'src' + p[1]) : path.resolve(path.dirname(absFilePath), p[1]);
         deps[dep] = true;
-        let t = templateExtract(dep);
+        let t = templateExtract(dep, undefined, local);
         t.require.forEach(r => {
             deps[r] = true;
         });
@@ -89,7 +89,7 @@ const templateExtract = (absFilePath, data, local) => {
     findParseModules.forEach(p => {
         let dep = path.resolve(cwd, 'src/module/' + p[1] + '/index.html');
         deps[dep] = true;
-        let t = templateExtract(dep);
+        let t = templateExtract(dep, undefined, local);
         t.require.forEach(r => {
             deps[r] = true;
         });
