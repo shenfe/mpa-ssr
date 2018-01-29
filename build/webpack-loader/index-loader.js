@@ -3,6 +3,18 @@ const path = require('path');
 
 const loaderUtils = require('loader-utils');
 
+const someTypeModuleOfFile = (p, types = []) => {
+    let fileName = path.basename(p).replace(/\.[a-z]+$/, '');
+    for (let fileType of types) {
+        if (fs.existsSync(p.replace(/\.[a-z]+$/, '.' + fileType))) {
+            return {
+                name: `${fileName}.${fileType}`,
+                path: p.replace(/\.[a-z]+$/, '.' + fileType)
+            };
+        }
+    }
+};
+
 module.exports = function (content) {
     let query = (loaderUtils.getOptions ? loaderUtils.getOptions(this) : loaderUtils.parseQuery(this.query)) || {};
     console.log(query);
@@ -16,14 +28,17 @@ module.exports = function (content) {
             placeholder.parentNode.innerHTML = require('velocity-template-engine').render(require('./index.html'), data);
         })();
         if (module.hot) {
-            module.hot.accept('./index.html', function () {
+            module.hot.accept(['./index.html'], function () {
+                console.log('self template updated');
                 location.reload();
             });
         }
         `;
     }
-    if (fs.existsSync(this.resourcePath.replace(/\.js$/, '.html'))) {
-        this.addDependency('./index.html');
+
+    let htmlFile = someTypeModuleOfFile(this.resourcePath, ['html']);
+    if (htmlFile) {
+        // this.addDependency(htmlFile.path);
         content = injectTemplateRender + content + `;require('!!vm-loader?+inner!./index.html');`;
     }
 
@@ -31,30 +46,18 @@ module.exports = function (content) {
         let pageName = (this.resourcePath.replace(/(\\)+/g, '/').match(/(?:.*?)\/([0-9a-zA-Z$_-]+)\/[0-9a-zA-Z$_-]+\.js/) || [])[1];
         let pageMock = path.resolve(process.cwd(), `./mock/page-${pageName}.json`);
         if (fs.existsSync(pageMock)) {
-            this.addDependency(pageMock);
+            // this.addDependency(pageMock);
             pageMock = path.relative(path.dirname(this.resourcePath), pageMock).replace(/(\\)+/g, '/');
             console.log(`${pageMock} listened`);
             content = `if (module.hot) {
-                module.hot.accept('${pageMock}', function () {
-                    console.log('${pageMock} changes');
+                require('${pageMock}');
+                module.hot.accept(['${pageMock}'], function () {
+                    console.log('page mock data updated');
                     location.reload();
                 });
-            };${content};`;
+            } ${content};`;
         }
     }
-
-    if (fs.existsSync(this.resourcePath.replace(/\.js$/, '.css'))) {
-        this.addDependency('./index.css');
-        content = `require('./index.css');${content}`;
-    } else if (fs.existsSync(this.resourcePath.replace(/\.js$/, '.scss'))) {
-        this.addDependency('./index.scss');
-        content = `require('./index.scss');${content}`;
-    } else if (fs.existsSync(this.resourcePath.replace(/\.js$/, '.sass'))) {
-        this.addDependency('./index.sass');
-        content = `require('./index.sass');${content}`;
-    }
-
-    console.log(`${this.resourcePath} has been injected.`);
 
     return content;
 };
