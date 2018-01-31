@@ -56,6 +56,14 @@ const htmlWebpackPluginCreator = (entries, { local }, publicPath) =>
         })
     );
 
+const aliasResolver = {
+    module: path.resolve(cwd, 'src/module/'),
+    page: path.resolve(cwd, 'src/page/'),
+    script: path.resolve(cwd, 'src/script/'),
+    snippet: path.resolve(cwd, 'src/snippet/'),
+    static: path.resolve(cwd, 'src/static/')
+};
+
 const cssLoaders = sass => ([
     'style-loader',
     'css-loader',
@@ -64,14 +72,26 @@ const cssLoaders = sass => ([
         options: {
             plugins: (loader) =>
                 [
+                    require('postcss-import')({
+                        resolve: require('postcss-import-webpack-resolver')({
+                            alias: {
+                                ...aliasResolver,
+                                ...(Object.keys(aliasResolver).reduce((p, next) => {
+                                    p[`~${next}`] = aliasResolver[next];
+                                    return p;
+                                }, {}))
+                            },
+                            modules: [path.resolve(cwd, 'src'), path.resolve(cwd, 'node_modules')]
+                        })
+                    }),
                     require('autoprefixer')(),
-                    require('postcss-px2rem')({
-                        remUnit: 75,
-                        baseDpr: 1,
-                        threeVersion: false,
-                        remVersion: true,
-                        remPrecision: 8
-                    })
+                    // require('postcss-px2rem')({
+                    //     remUnit: 75,
+                    //     baseDpr: 1,
+                    //     threeVersion: false,
+                    //     remVersion: true,
+                    //     remPrecision: 8
+                    // })
                 ]
         }
     },
@@ -116,13 +136,7 @@ module.exports = (specifiedEntries, options = {}) => {
                 'node_modules',
                 path.resolve(cwd, 'src/static/lib')
             ],
-            alias: {
-                module: path.resolve(cwd, 'src/module/'),
-                page: path.resolve(cwd, 'src/page/'),
-                script: path.resolve(cwd, 'src/script/'),
-                snippet: path.resolve(cwd, 'src/snippet/'),
-                static: path.resolve(cwd, 'src/static/')
-            }
+            alias: aliasResolver
         },
         watch: options.local,
         performance: {
