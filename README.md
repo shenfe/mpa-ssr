@@ -80,13 +80,13 @@ test | 测试服务
 ### 4.1 构建并启动本地开发环境
 
 ```bash
-npm run clean && npm run build:dll && npm run build:local
+$ npm run clean && npm run build:dll && npm run build:local
 ```
 
 ### 4.2 构建线上环境代码并在本地预览
 
 ```bash
-npm run clean && npm run build:dll && npm run build && npm run serve
+$ npm run clean && npm run build:dll && npm run build && npm run serve
 ```
 
 ### 4.3 在终端树状打印页面和组件依赖
@@ -94,7 +94,7 @@ npm run clean && npm run build:dll && npm run build && npm run serve
 打印所有页面所有模块依赖：
 
 ```bash
-npm run tree
+$ npm run tree
 ```
 
 例如对于示例，输出：
@@ -111,7 +111,7 @@ npm run tree
 默认只打印页面和模块，如果需要显示到模板的粒度，加`-t`选项：
 
 ```bash
-npm run tree -- -t
+$ npm run tree -- -t
 ```
 
 例如对于示例，输出：
@@ -139,7 +139,7 @@ npm run tree -- -t
 如果只需查看特定页面，加页面名：
 
 ```bash
-npm run tree -- page_name
+$ npm run tree -- page_name
 ```
 
 例如对于示例中的list页面，输出：
@@ -159,7 +159,7 @@ npm run tree -- page_name
 ### 6.1 第三方库Dll打包
 
 ```bash
-npm run build:dll
+$ npm run build:dll
 ```
 
 ### 6.2 生产环境
@@ -167,13 +167,13 @@ npm run build:dll
 建议环境：pre、prod。
 
 ```bash
-npm run build
+$ npm run build
 ```
 
 如果只需要构建某一页面，则指定该页面：
 
 ```bash
-npm run build -- page_name
+$ npm run build -- page_name
 ```
 
 ### 6.3 测试环境
@@ -181,7 +181,7 @@ npm run build -- page_name
 不压缩代码。建议环境：dev、test。
 
 ```bash
-npm run build:devel
+$ npm run build:devel
 ```
 
 如果只需要构建某一页面，则指定该页面。
@@ -191,7 +191,7 @@ npm run build:devel
 结合mock数据，使用Webpack DevServer和热加载，本地开发调试。
 
 ```bash
-npm run build:local
+$ npm run build:local
 ```
 
 如果只需要构建某一页面，则指定该页面。
@@ -209,7 +209,7 @@ npm run build:local
 如果已经构建了测试或正式环境的代码，想要预览效果，则手动启动本地测试服务，即执行：
 
 ```
-npm run serve
+$ npm run serve
 ```
 
 ### 7.3 接口
