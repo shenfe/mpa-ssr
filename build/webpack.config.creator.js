@@ -2,6 +2,8 @@ const Webpack = require('webpack');
 
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+
 const fs = require('fs');
 const path = require('path');
 
@@ -260,7 +262,7 @@ module.exports = (specifiedEntries, options = {}) => {
                 cssProcessorOptions: {
                     zindex: false
                 }
-            }), new Webpack.optimize.UglifyJsPlugin()] : []),
+            }), new UglifyJsPlugin()] : []),
             ...htmlWebpackPluginCreator(entries, options, publicPath),
             ...(projConf.serviceWorker ? [new SWPrecacheWebpackPlugin(
                 {
